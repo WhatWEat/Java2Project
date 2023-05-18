@@ -1,5 +1,7 @@
 package cse.java2.project;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -9,69 +11,56 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import cse.java2.project.entities.Question;
 
 public class StackOverflowCrawler {
 
-    public static <MyClass> void main(String[] args) {
+    public static void main(String[] args) {
 
         String apiUrl = "https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow";
 
         try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            JSONArray mergeArray = new JSONArray();
+            for (int i = 0; i < 40; i++) {
+                URL url = new URL(apiUrl);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
 
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                System.out.println(connection.getContentEncoding());
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
-                String line;
-                StringBuilder response = new StringBuilder();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
+                    String line;
+                    StringBuilder response = new StringBuilder();
 
-                while ((line = reader.readLine()) != null) {
-                    response.append(line).append('\n');
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line).append('\n');
+                    }
+                    reader.close();
+
+                    JSONArray itemsArray = JSON.parseObject(response.toString()).getJSONArray("items");
+                    mergeArray.addAll(itemsArray);
+                } else {
+                    System.out.println("HTTP request failed. Response Code: " + responseCode);
                 }
-                reader.close();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/jsons/questions.json")));
-                writer.write(response.toString());
-                writer.close();
-
-
-            } else {
-                System.out.println("HTTP request failed. Response Code: " + responseCode);
             }
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/jsons/questions.json")));
+                writer.write(mergeArray.toString());
+                writer.close();
+                List<Question> questions = mergeArray.toJavaList(Question.class);
+                System.out.println(questions);
+
+
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
 
-class Question {
-    private String title;
-    private List<String> tags;
-    private String link;
-
-    public Question(String title, List<String> tags, String link) {
-        this.title = title;
-        this.tags = tags;
-        this.link = link;
-    }
-
-    // Getters and setters
-
-    // Optional: Override toString() method for better output representation
-}
