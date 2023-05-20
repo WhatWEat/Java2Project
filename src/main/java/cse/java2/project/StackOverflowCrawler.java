@@ -4,49 +4,62 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.zip.GZIPInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import cse.java2.project.entities.Question;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 public class StackOverflowCrawler {
 
     public static void main(String[] args) {
 
-        String apiUrl = "https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow";
 
         try {
             JSONArray mergeArray = new JSONArray();
-            for (int i = 0; i < 40; i++) {
-                URL url = new URL(apiUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
+            for (int i = 0; i < 1; i++) {
+                String apiUrl = "https://api.stackexchange.com/2.3/questions?page=5&pagesize=20&order=desc&sort=activity&site=stackoverflow";
 
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
+                CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+                HttpGet request = new HttpGet(apiUrl);
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(connection.getInputStream())));
-                    String line;
-                    StringBuilder response = new StringBuilder();
+                try {
+                    CloseableHttpResponse response =  httpClient.execute(request);
+                    int statusCode = response.getStatusLine().getStatusCode();
 
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line).append('\n');
+                    if (statusCode == 200) {
+                        HttpEntity entity = response.getEntity();
+                        String jsonResponse = EntityUtils.toString(entity);
+                        System.out.println(jsonResponse);
+                        JSONArray itemsArray = JSON.parseObject(response.toString()).getJSONArray("items");
+                        mergeArray.addAll(itemsArray);
+                    } else {
+                        System.out.println("Error: " + statusCode);
                     }
-                    reader.close();
-
-                    JSONArray itemsArray = JSON.parseObject(response.toString()).getJSONArray("items");
-                    mergeArray.addAll(itemsArray);
-                } else {
-                    System.out.println("HTTP request failed. Response Code: " + responseCode);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+
+
             }
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/jsons/questions.json")));
                 writer.write(mergeArray.toString());
@@ -61,6 +74,9 @@ public class StackOverflowCrawler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
 
