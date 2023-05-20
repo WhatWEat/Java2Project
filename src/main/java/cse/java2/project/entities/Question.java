@@ -1,12 +1,16 @@
 package cse.java2.project.entities;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class Question {
+    @TableField(exist = false)
     private List<String> tags;
+    @TableField(exist = false)
     private Owner owner;
     private boolean is_answered;
     private int view_count;
@@ -19,6 +23,18 @@ public class Question {
     private String content_license;
     private String link;
     private String title;
+
+    @JSONField(serialize = false)
+    private long owner_account_id;
+
+    public long getOwner_account_id() {
+        return owner_account_id;
+    }
+
+    public void setOwner_account_id(long owner_account_id) {
+        this.owner_account_id = owner_account_id;
+    }
+
     @JsonCreator
     public Question(){
 
