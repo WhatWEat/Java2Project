@@ -32,24 +32,25 @@ public class StackOverflowCrawler {
 
     public static void main(String[] args) {
 
-
         try {
             JSONArray mergeArray = new JSONArray();
-            for (int i = 0; i < 1; i++) {
-                String apiUrl = "https://api.stackexchange.com/2.3/questions?page=5&pagesize=20&order=desc&sort=activity&site=stackoverflow";
-
+            for (int i = 0; i < 10; i++) {
+                String apiUrl = String.format(
+                    "https://api.stackexchange.com/2.3/questions?page=%d"
+                        + "&pagesize=100&order=desc&sort=activity&site=stackoverflow"
+                    , i + 1);
                 CloseableHttpClient httpClient = HttpClientBuilder.create().build();
                 HttpGet request = new HttpGet(apiUrl);
 
                 try {
-                    CloseableHttpResponse response =  httpClient.execute(request);
+                    CloseableHttpResponse response = httpClient.execute(request);
                     int statusCode = response.getStatusLine().getStatusCode();
 
                     if (statusCode == 200) {
                         HttpEntity entity = response.getEntity();
                         String jsonResponse = EntityUtils.toString(entity);
                         System.out.println(jsonResponse);
-                        JSONArray itemsArray = JSON.parseObject(response.toString()).getJSONArray("items");
+                        JSONArray itemsArray = JSON.parseObject(jsonResponse).getJSONArray("items");
                         mergeArray.addAll(itemsArray);
                     } else {
                         System.out.println("Error: " + statusCode);
@@ -59,16 +60,13 @@ public class StackOverflowCrawler {
                 }
 
 
-
             }
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("src/main/resources/jsons/questions.json")));
-                writer.write(mergeArray.toString());
-                writer.close();
-                List<Question> questions = mergeArray.toJavaList(Question.class);
-                System.out.println(questions);
-
-
-
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("src/main/resources/jsons/questions.json")));
+            writer.write(mergeArray.toString());
+            writer.close();
+            List<Question> questions = mergeArray.toJavaList(Question.class);
+            System.out.println(questions);
 
 
         } catch (IOException e) {
