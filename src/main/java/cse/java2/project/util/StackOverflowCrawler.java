@@ -1,4 +1,4 @@
-package cse.java2.project;
+package cse.java2.project.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
