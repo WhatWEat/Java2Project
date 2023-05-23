@@ -22,14 +22,16 @@ import org.apache.http.util.EntityUtils;
 public class AcceptAnsCrawler {
     public static void main(String[] args) throws IOException {
         Map<Long, List<Answer>> ansOfQue = new HashMap<>();
-        JSONObject ansQueJson = new JSONObject();
+        JSONArray ansQueJson = new JSONArray();
         String key = "A71YmgTD8Wao7nN2aakPpg((";
-        for(Question q: JsonParser.questions){
-
+        for (int i = 0; i < JsonParser.questions.size()/100; i++) {
+            StringBuilder ids = new StringBuilder(String.valueOf(JsonParser.questions.get(100*i).getQuestion_id()));
+            for (int j = 1; j < 100; j++) {
+                ids.append(';').append(JsonParser.questions.get(100*i+j).getQuestion_id());
+            }
             String apiUrl = String.format(
-                "https://api.stackexchange.com/2.3/questions/%d/answers?order=desc&sort=activity&site=stackoverflow&filter=!nOedRLgcx)&key=%s"
-                , q.getQuestion_id(),key);
-            System.out.printf("\n\n\n%d\n\n\n", q.getQuestion_id());
+                "https://api.stackexchange.com/2.3/questions/%s/answers?order=desc&sort=activity&site=stackoverflow&filter=!nOedRLgcx)&key=%s"
+                , ids.toString(), key);
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(apiUrl);
 
@@ -42,7 +44,7 @@ public class AcceptAnsCrawler {
                     String jsonResponse = EntityUtils.toString(entity);
 //                    System.out.println(jsonResponse);
                     JSONArray itemsArray = JSON.parseObject(jsonResponse).getJSONArray("items");
-                    ansQueJson.put(String.valueOf(q.getQuestion_id()), itemsArray);
+                    ansQueJson.addAll(itemsArray);
                 } else {
                     System.out.println("Error: " + statusCode);
                 }
