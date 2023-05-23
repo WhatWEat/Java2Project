@@ -1,16 +1,27 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-  </div>
+  <el-container>
+    <el-header>
+      <MainTabs></MainTabs>
+    </el-header>
+    <el-main>
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
 
+import AnswerData from "@/components/AnswerData.vue";
+import MainTabs from "@/components/MainTabs.vue";
+
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  components: {MainTabs, AnswerData},
+  methods: {
+
+  },
 }
 </script>
 
@@ -22,5 +33,13 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
