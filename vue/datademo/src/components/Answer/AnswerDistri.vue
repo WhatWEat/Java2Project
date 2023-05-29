@@ -9,23 +9,9 @@ export default {
     return {
       chart: null,
       graphData: {
-        dataset: {
-          source: [
-            ['score', 'number'],
-            [89.3, '1'],
-            [57.1, '2'],
-            [74.4, '3'],
-            [50.1, '4'],
-            [89.7, '5'],
-            [68.1, '6'],
-            [19.6, '7'],
-            [10.6, '8'],
-            [32.7, '9']
-          ]
-        },
         grid: { containLabel: true },
-        xAxis: { type: 'category' },  // 类型改为 category
-        yAxis: { name: 'score' },    // 名称改为 amount
+        xAxis: { type: 'category' },
+        yAxis: { name: 'score' },
         visualMap: {
           orient: 'horizontal',
           left: 'center',
@@ -33,20 +19,26 @@ export default {
           max: 100,
           text: ['High Score', 'Low Score'],
           // Map the score column to color
-          dimension: 0,
+          dimension: 1,
           inRange: {
             color: ['#65B581', '#FFCE34', '#FD665F']
           }
         },
         series: [
           {
+            name: 'score',
             type: 'bar',
-            encode: {
-              // Map the "product" column to X axis.
-              x: 'number',
-              // Map the "amount" column to Y axis
-              y: ''
-            }
+            data: [
+              {value: 89.3, name: '1'},
+              {value: 57.1, name: '2'},
+              {value: 74.4, name: '3'},
+              {value: 50.1, name: '4'},
+              {value: 89.7, name: '5'},
+              {value: 68.1, name: '6'},
+              {value: 19.6, name: '7'},
+              {value: 10.6, name: '8'},
+              {value: 32.7, name: '9'}
+            ]
           }
         ]
       },
