@@ -3,23 +3,8 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <div>
-          <el-statistic group-separator="," :precision="2" :value="value2" :title="title"></el-statistic>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div>
-          <el-statistic title="男女比">
-            <template slot="formatter"> 456/2 </template>
-          </el-statistic>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div>
-          <el-statistic group-separator="," :precision="2" decimal-separator="." :value="value1" :title="title">
+          <el-statistic group-separator="," :value="problem" title="问题总数">
             <template slot="prefix">
-              <i class="el-icon-s-flag" style="color: red"></i>
-            </template>
-            <template slot="suffix">
               <i class="el-icon-s-flag" style="color: blue"></i>
             </template>
           </el-statistic>
@@ -27,12 +12,30 @@
       </el-col>
       <el-col :span="6">
         <div>
-          <el-statistic :value="like ? 521 : 520" title="Feedback">
+          <el-statistic title="解答比">
+            <template slot="prefix">
+              <i class="el-icon-s-flag" style="color: red"></i>
+              <span>{{this.answerAverage.toFixed(2)}}</span>
+            </template>
+
+          </el-statistic>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div>
+          <el-statistic title="单个问题最多的回答" :value="this.maxAnswer">
             <template slot="suffix">
-              <span @click="like = !like" class="like">
-                <i class="el-icon-star-on" style="color:red" v-show="!!like"></i>
-                <i class="el-icon-star-off" v-show="!like"></i>
-              </span>
+                <i class="el-icon-star-off"></i>
+            </template>
+          </el-statistic>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div>
+          <el-statistic title="每个问题下回答的平均数">
+            <template slot="suffix">
+                <i class="el-icon-star-on" style="color:red"></i>
+                <span>{{this.average.toFixed(2)}}</span>
             </template>
           </el-statistic>
         </div>
@@ -42,15 +45,53 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AnserStatic",
   data() {
     return {
       like: true,
-      value1: 4154.564,
-      value2: 2222,
-      title: '今年的增长',
+      problem: 0,
+      answer: 0,
+      average: 1.0,
+      answerAverage: 1.0,
+      maxAnswer: 1,
     };
+  },
+  methods: {
+    getProblem(){
+      axios.get('NumberOfAnswers/Q1').then(res => {
+        this.problem = res.data[1];
+        console.log(this.problem);
+        this.calculateAverage();
+      })
+    },
+    getAnswer(){
+      axios.get('NumberOfAnswers/Q2/avg').then(res => {
+        this.answer = res.data[0];
+        console.log(this.answer);
+        this.calculateAverage();
+      });
+      axios.get('/NumberOfAnswers/Q2/max').then(res => {
+        this.maxAnswer = res.data;
+        console.log(this.maxAnswer);
+      });
+      axios.get('/AcceptedAnswers/Q1').then(res => {
+        this.answerAverage = res.data[0]/res.data[1];
+        console.log(this.answerAverage);
+      });
+    },
+    calculateAverage() {
+      if (this.answer !== undefined && this.problem !== undefined) {
+        this.average = this.answer / this.problem;
+        console.log(this.average);
+      }
+    }
+  },
+  mounted() {
+    this.getProblem();
+    this.getAnswer();
   },
 };
 </script>

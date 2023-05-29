@@ -1,15 +1,19 @@
 <template>
   <!--  使用没有答案的百分比-->
-  <div id="noAnswer" style="width: 60vw; height: 60vh"/>
+  <div id="noAnswer" style="width: 80vw; height: 80vh"/>
 </template>
 
 <script>
+
+import axios from "axios";
 
 export default {
   name: "NoAnswer",
   data() {
     return {
       chart: null,
+      noAnswerData: null,
+      timeAnswerData: null,
       graphData: {
         tooltip: {
           trigger: 'item',
@@ -17,21 +21,11 @@ export default {
         },
         legend: {
           data: [
-            'Direct',
-            'Marketing',
-            'Search Engine',
-            'Email',
-            'Union Ads',
-            'Video Ads',
-            'Baidu',
-            'Google',
-            'Bing',
-            'Others'
           ]
         },
         series: [
           {
-            name: 'Access From',
+            name: 'Problem Distribution',
             type: 'pie',
             selectedMode: 'single',
             radius: [0, '30%'],
@@ -43,13 +37,10 @@ export default {
               show: false
             },
             data: [
-              {value: 1548, name: 'Search Engine'},
-              {value: 775, name: 'Direct'},
-              {value: 679, name: 'Marketing', selected: true}
             ]
           },
           {
-            name: 'Access From',
+            name: 'Problem Distribution',
             type: 'pie',
             radius: ['45%', '60%'],
             labelLine: {
@@ -88,14 +79,6 @@ export default {
               }
             },
             data: [
-              {value: 1048, name: 'Baidu'},
-              {value: 335, name: 'Direct'},
-              {value: 310, name: 'Email'},
-              {value: 251, name: 'Google'},
-              {value: 234, name: 'Union Ads'},
-              {value: 147, name: 'Bing'},
-              {value: 135, name: 'Video Ads'},
-              {value: 102, name: 'Others'}
             ]
           }
         ]
@@ -103,6 +86,30 @@ export default {
     };
   },
   methods: {
+    getData() {
+      axios.get('/AcceptedAnswers/Q2').then(res => {
+        this.timeAnswerData = res.data;
+        console.log(this.timeAnswerData);
+        this.graphData.series[1].data = this.timeAnswerData.map(item => ({
+            value: item.value,
+            name: item.name,
+        }));
+        this.graphData.legend.data = this.timeAnswerData.map(item => item.name);
+        this.drawChart();
+      });
+      axios.get('/NumberOfAnswers/Q1').then(res => {
+        this.noAnswerData = res.data;
+        console.log(this.noAnswerData);
+        this.graphData.series[0].data = [{
+          name: 'No Answer',
+          value: this.noAnswerData[0]
+        },{
+          name: 'Have Answer',
+          value: this.noAnswerData[1]
+        }];
+        this.drawChart();
+      });
+    },
     drawChart() {
       // 基于准备好的dom，初始化echarts实例  这个和上面的main对应
       this.chart = this.$echarts.init(document.getElementById("noAnswer"));
@@ -113,7 +120,9 @@ export default {
     },
   },
   mounted() {
-    this.drawChart();
+    this.getData();
+    console.log(this.graphData);
+
   },
   beforeDestroy() {
     if (this.chart != null) {
