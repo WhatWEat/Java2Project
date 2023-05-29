@@ -7,6 +7,8 @@ import cse.java2.project.Mapper.QuestionMapper;
 import cse.java2.project.entities.Owner;
 import cse.java2.project.entities.Question;
 import cse.java2.project.util.JsonParser;
+import cse.java2.project.util.Pair;
+import cse.java2.project.util.PairParser;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,40 +25,63 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class QuestionController {
-
-
+    /**
+     *
+     * @return [0]是没答案的数量，[1]是总共问题的数量
+     */
     @GetMapping("/NumberOfAnswers/Q1")
-    public float noAnsCount(){
+
+    public List<Integer> noAnsCount(){
         return JsonParser.noAnsCount();
     }
-
+    /**
+     *
+     * @return [0]总共的答案数量，[1]是总共问题的数量
+     */
     @GetMapping("/NumberOfAnswers/Q2/avg")
-    public float avgAnsCount(){
+    public List<Integer>  avgAnsCount(){
         return JsonParser.avgAnsCount();
     }
-
+    /**
+     *
+     * @return 最多回答的数量
+     */
     @GetMapping("/NumberOfAnswers/Q2/max")
     public int maxAnsCount(){
         return JsonParser.maxAnsCount();
     }
 
+    /**
+     *
+     * @return 回答数量分布
+     */
     @GetMapping("/NumberOfAnswers/Q3")
-    public Map<String, Float> ansDistribution(){
-        return JsonParser.ansDistribution();
+    public List<Pair> ansDistribution(){
+        return PairParser.MapToList(JsonParser.ansDistribution());
     }
 
+    /**
+     *
+     * @return [0]是有isAnswered的数量，[1]是总共的问题数量
+     */
     @GetMapping("/AcceptedAnswers/Q1")
-    public float acceptAnsPercent(){
-        return JsonParser.acceptAnsPercent();
+    public List<Integer> acceptAnsCnt(){
+        return JsonParser.acceptAnsCnt();
     }
-
+    /**
+     *
+     * @return value是时间间距，name是时常陈述
+     */
     @GetMapping("/AcceptedAnswers/Q2")
-    public Map<String, Float> resolutionTimeDis(){
-        return JsonParser.resolutionTimeDis();
+    public List<Pair> resolutionTimeDis(){
+        return PairParser.MapToList(JsonParser.resolutionTimeDis());
     }
-
+    /**
+     *
+     * @return [0]是有over的数量，[1]是总共被回答的问题数量
+     */
     @GetMapping("/AcceptedAnswers/Q3")
-    public float ansOverAccept(){
+    public List<Integer> ansOverAccept(){
         return JsonParser.ansOverAccept();
     }
 
