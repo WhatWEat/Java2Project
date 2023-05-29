@@ -141,10 +141,10 @@ public class JsonParser {
                 }
             }
         }
-        result.put("<1天", lessThanOneDay);
-        result.put("<2天", lessThanTwoDay);
-        result.put("<一周", lessThanAWeek);
-        result.put(">=一周", longerThanAWeek);
+        result.put("<1 day", lessThanOneDay);
+        result.put("<2 day", lessThanTwoDay);
+        result.put("<1 week", lessThanAWeek);
+        result.put(">=1 week", longerThanAWeek);
         return result;
     }
 
