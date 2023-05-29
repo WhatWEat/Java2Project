@@ -23,6 +23,15 @@ public class Question {
     private String content_license;
     private String link;
     private String title;
+    private int up_vote_count;
+
+    public int getUp_vote_count() {
+        return up_vote_count;
+    }
+
+    public void setUp_vote_count(int up_vote_count) {
+        this.up_vote_count = up_vote_count;
+    }
 
     @JSONField(serialize = false)
     private long owner_account_id;
