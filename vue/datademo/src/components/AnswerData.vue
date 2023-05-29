@@ -5,10 +5,10 @@
     </el-header>
     <el-main>
       <el-row type="flex" justify="space-between">
-        <el-col :span="12">
+        <el-col :span="14">
           <NoAnswer></NoAnswer>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="10">
           <AnswerDistri></AnswerDistri>
         </el-col>
       </el-row>

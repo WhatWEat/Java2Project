@@ -1,5 +1,5 @@
 <template>
-  <div id="anserDistri" style="width: 30vw; height: 50vh"/>
+  <div id="anserDistri" style="width: 40vw; height: 50vh"/>
 </template>
 
 <script>
@@ -9,54 +9,47 @@ export default {
     return {
       chart: null,
       graphData: {
-        tooltip: {
-          trigger: 'item'
+        dataset: {
+          source: [
+            ['score', 'number'],
+            [89.3, '1'],
+            [57.1, '2'],
+            [74.4, '3'],
+            [50.1, '4'],
+            [89.7, '5'],
+            [68.1, '6'],
+            [19.6, '7'],
+            [10.6, '8'],
+            [32.7, '9']
+          ]
         },
-        legend: {
-          top: '5%',
+        grid: { containLabel: true },
+        xAxis: { type: 'category' },  // 类型改为 category
+        yAxis: { name: 'score' },    // 名称改为 amount
+        visualMap: {
+          orient: 'horizontal',
           left: 'center',
-          // doesn't perfectly work with our tricks, disable it
-          selectedMode: false
+          min: 10,
+          max: 100,
+          text: ['High Score', 'Low Score'],
+          // Map the score column to color
+          dimension: 0,
+          inRange: {
+            color: ['#65B581', '#FFCE34', '#FD665F']
+          }
         },
         series: [
           {
-            name: 'Access From',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            center: ['50%', '70%'],
-            // adjust the start angle
-            startAngle: 180,
-            label: {
-              show: true,
-              formatter(param) {
-                // correct the percentage
-                return param.name + ' (' + param.percent * 2 + '%)';
-              }
-            },
-            data: [
-              {value: 1048, name: 'Search Engine'},
-              {value: 735, name: 'Direct'},
-              {value: 580, name: 'Email'},
-              {value: 484, name: 'Union Ads'},
-              {value: 300, name: 'Video Ads'},
-              {
-                // make an record to fill the bottom 50%
-                value: 1048 + 735 + 580 + 484 + 300,
-                itemStyle: {
-                  // stop the chart from rendering this piece
-                  color: 'none',
-                  decal: {
-                    symbol: 'none'
-                  }
-                },
-                label: {
-                  show: false
-                }
-              }
-            ]
+            type: 'bar',
+            encode: {
+              // Map the "product" column to X axis.
+              x: 'number',
+              // Map the "amount" column to Y axis
+              y: ''
+            }
           }
         ]
-      }
+      },
     };
   },
   methods: {
