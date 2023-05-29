@@ -49,8 +49,8 @@ public class AcceptAnsCrawler {
                 e.printStackTrace();
             }
         }
-//        ansOfQue = ansQueJson.toJavaObject(ansOfQue.getClass());
-//        System.out.println(ansOfQue);
+        ansOfQue = ansQueJson.toJavaObject(ansOfQue.getClass());
+        System.out.println(ansOfQue);
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
             new FileOutputStream("src/main/resources/jsons/answers.json")));
         writer.write(ansQueJson.toString());
