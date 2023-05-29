@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class JsonParser {
         }
     }
 
-    public static float noAnsCount(){
+    public static List<Integer> noAnsCount(){
         int totalCount = questions.size();
         AtomicInteger noAnsCnt = new AtomicInteger(0);
         questions.forEach(e -> {
@@ -64,16 +65,16 @@ public class JsonParser {
                 noAnsCnt.getAndIncrement();
             }
         });
-        return (float) noAnsCnt.get()/totalCount;
+        return Arrays.asList(noAnsCnt.get(), totalCount);
     }
 
-    public static float avgAnsCount(){
+    public static List<Integer>  avgAnsCount(){
         int totalCount = questions.size();
         AtomicInteger totalAns = new AtomicInteger(0);
         questions.forEach(e -> {
             totalAns.addAndGet(e.getAnswer_count());
         });
-        return (float) totalAns.get()/totalCount;
+        return Arrays.asList(totalAns.get(), totalCount);
     }
 
     public static int maxAnsCount(){
@@ -87,39 +88,38 @@ public class JsonParser {
         return max.get();
     }
 
-    public static Map<Integer, Integer> ansDistribution(){
-        Map<Integer, Integer> result = new HashMap<>();
+    public static Map<String, Integer> ansDistribution(){
+        Map<String, Integer> result = new HashMap<>();
         for(List<Answer> answers: ansOfQues.values()){
-            int value = result.getOrDefault(answers.size(), 0);
-            result.put(answers.size(), value+1);
+            int value = result.getOrDefault(String.valueOf(answers.size()), 0);
+            result.put(String.valueOf(answers.size()), value+1);
         }
+        result.put("0", questions.size() - ansOfQues.size());
         return result;
     }
 
-    public static float acceptAnsPercent(){
+    public static List<Integer>  acceptAnsCnt(){
         int totalCount = questions.size();
         AtomicInteger acc = new AtomicInteger(0);
         questions.forEach(e -> {
             if(e.isIs_answered())
                 acc.getAndIncrement();
         });
-        return (float) acc.get() / totalCount;
+        return Arrays.asList(acc.get(), totalCount);
     }
 
-    public static Map<String, Float> resolutionTimeDis(){
+    public static Map<String, Integer> resolutionTimeDis(){
         int lessThanOneDay = 0,
             lessThanTwoDay = 0,
             lessThanAWeek = 0,
             longerThanAWeek = 0;
-        System.err.println(idOfQue.size());
-        System.err.println(ansOfQues.size());
-        Map<String, Float> result = new HashMap<>();
+        Map<String, Integer> result = new HashMap<>();
         for (Long l: idOfQue.keySet()) {
             Question q = idOfQue.get(l);
             if(q.isIs_answered()){
                 List<Answer> answers = ansOfQues.get(l);
                 if(answers == null){
-                    System.err.println(q.getQuestion_id());
+                    continue;
                 }
                 for (Answer answer : answers) {
                     if(answer.isIs_accepted()){
@@ -141,22 +141,24 @@ public class JsonParser {
                 }
             }
         }
-        int sum = (lessThanOneDay+lessThanTwoDay+lessThanAWeek+longerThanAWeek);
-        result.put("lessThanOneDay", (float)lessThanOneDay/sum);
-        result.put("lessThanTwoDay", (float)lessThanTwoDay/sum);
-        result.put("lessThanAWeek", (float)lessThanAWeek/sum);
-        result.put("longerThanAWeek", (float)longerThanAWeek/sum);
+        result.put("lessThanOneDay", lessThanOneDay);
+        result.put("lessThanTwoDay", lessThanTwoDay);
+        result.put("lessThanAWeek", lessThanAWeek);
+        result.put("longerThanAWeek", longerThanAWeek);
         return result;
     }
 
-    public static float ansOverAccept(){
+    public static List<Integer> ansOverAccept(){
         int over = 0, total = 0;
         for (Long l: idOfQue.keySet()) {
             Question q = idOfQue.get(l);
             if(q.isIs_answered()){
                 total++;
                 int accVote = 0, maxVote = 0;
-                for (Answer answer : ansOfQues.get(l)) {
+                List<Answer> answers = ansOfQues.get(l);
+                if(answers == null)
+                    continue;
+                for (Answer answer : answers) {
                     if(answer.isIs_accepted()){
                         accVote = answer.getUp_vote_count();
                     }
@@ -169,7 +171,7 @@ public class JsonParser {
                 }
             }
         }
-        return (float) over / total;
+        return Arrays.asList(over , total);
     }
 
 }

@@ -26,6 +26,7 @@ public class AcceptAnsCrawler {
         JSONArray ansQueJson = new JSONArray();
         String key = "A71YmgTD8Wao7nN2aakPpg((";
         int pointer = 0;
+        System.err.println(JsonParser.questions.size());
         while(pointer < JsonParser.questions.size()){
             StringBuilder ids = new StringBuilder(String.valueOf(JsonParser.questions.get(pointer).getQuestion_id()));
             int currentSize = 0;
