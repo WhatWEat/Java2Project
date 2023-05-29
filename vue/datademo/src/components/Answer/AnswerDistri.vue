@@ -1,23 +1,29 @@
 <template>
-  <div id="anserDistri" style="width: 40vw; height: 50vh"/>
+  <div id="anserDistri" style="width: 80vw; height: 80vh"/>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AnswerDistri",
   data() {
     return {
       chart: null,
+      data: [],
       graphData: {
-        grid: { containLabel: true },
-        xAxis: { type: 'category' },
-        yAxis: { name: 'score' },
+        grid: {containLabel: true},
+        xAxis: {
+          type: 'category',
+          data: []
+        },
+        yAxis: {name: 'score'},
         visualMap: {
           orient: 'horizontal',
           left: 'center',
           min: 10,
           max: 100,
-          text: ['High Score', 'Low Score'],
+          text: ['More', 'Less'],
           // Map the score column to color
           dimension: 1,
           inRange: {
@@ -28,23 +34,25 @@ export default {
           {
             name: 'score',
             type: 'bar',
-            data: [
-              {value: 89.3, name: '1'},
-              {value: 57.1, name: '2'},
-              {value: 74.4, name: '3'},
-              {value: 50.1, name: '4'},
-              {value: 89.7, name: '5'},
-              {value: 68.1, name: '6'},
-              {value: 19.6, name: '7'},
-              {value: 10.6, name: '8'},
-              {value: 32.7, name: '9'}
-            ]
+            data: []
           }
         ]
       },
     };
   },
   methods: {
+    getData() {
+      axios.get('/AcceptedAnswers/Q2').then(res => {
+        this.data = res.data;
+        this.graphData.xAxis.data = this.data.map(item => item.name);
+        this.graphData.series[0].data = this.data.map(item => ({
+          value: item.value,
+          name: item.name,
+        }));
+        console.log(this.graphData.series[0].data);
+        this.drawChart();
+      });
+    },
     drawChart() {
       // 基于准备好的dom，初始化echarts实例  这个和上面的main对应
       this.chart = this.$echarts.init(document.getElementById("anserDistri"));
@@ -55,10 +63,10 @@ export default {
     },
   },
   mounted() {
-    this.drawChart();
+    this.getData();
   },
   beforeDestroy() {
-    if(this.chart != null){
+    if (this.chart != null) {
       this.chart.dispose();
     }
   }
