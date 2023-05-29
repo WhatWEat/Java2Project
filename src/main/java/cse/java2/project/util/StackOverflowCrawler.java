@@ -37,7 +37,7 @@ public class StackOverflowCrawler {
             for (int i = 0; i < 10; i++) {
                 String apiUrl = String.format(
                     "https://api.stackexchange.com/2.3/questions?page=%d"
-                        + "&pagesize=100&order=desc&sort=activity&site=stackoverflow"
+                        + "&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNJuex"
                     , i + 1);
                 CloseableHttpClient httpClient = HttpClientBuilder.create().build();
                 HttpGet request = new HttpGet(apiUrl);
