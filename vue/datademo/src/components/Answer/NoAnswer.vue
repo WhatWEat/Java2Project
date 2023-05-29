@@ -1,60 +1,84 @@
 <template>
   <!--  使用没有答案的百分比-->
-  <div id="noAnswer" style="width: 30vw; height: 50vh"/>
+  <div id="noAnswer" style="width: 80vw; height: 80vh"/>
 </template>
 
 <script>
+
+import axios from "axios";
 
 export default {
   name: "NoAnswer",
   data() {
     return {
       chart: null,
+      noAnswerData: null,
+      timeAnswerData: null,
       graphData: {
         tooltip: {
-          trigger: 'item'
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
         legend: {
-          top: '5%',
-          left: 'center',
-          // doesn't perfectly work with our tricks, disable it
-          selectedMode: false
+          data: [
+          ]
         },
         series: [
           {
-            name: 'Access From',
+            name: 'Problem Distribution',
             type: 'pie',
-            radius: ['40%', '70%'],
-            center: ['50%', '70%'],
-            // adjust the start angle
-            startAngle: 180,
+            selectedMode: 'single',
+            radius: [0, '30%'],
             label: {
-              show: true,
-              formatter(param) {
-                // correct the percentage
-                return param.name + ' (' + param.percent * 2 + '%)';
+              position: 'inner',
+              fontSize: 14
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+            ]
+          },
+          {
+            name: 'Problem Distribution',
+            type: 'pie',
+            radius: ['45%', '60%'],
+            labelLine: {
+              length: 30
+            },
+            label: {
+              formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
+              backgroundColor: '#F6F8FC',
+              borderColor: '#8C8D8E',
+              borderWidth: 1,
+              borderRadius: 4,
+              rich: {
+                a: {
+                  color: '#6E7079',
+                  lineHeight: 22,
+                  align: 'center'
+                },
+                hr: {
+                  borderColor: '#8C8D8E',
+                  width: '100%',
+                  borderWidth: 1,
+                  height: 0
+                },
+                b: {
+                  color: '#4C5058',
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  lineHeight: 33
+                },
+                per: {
+                  color: '#fff',
+                  backgroundColor: '#4C5058',
+                  padding: [3, 4],
+                  borderRadius: 4
+                }
               }
             },
             data: [
-              { value: 1048, name: 'Search Engine' },
-              { value: 735, name: 'Direct' },
-              { value: 580, name: 'Email' },
-              { value: 484, name: 'Union Ads' },
-              { value: 300, name: 'Video Ads' },
-              {
-                // make an record to fill the bottom 50%
-                value: 1048 + 735 + 580 + 484 + 300,
-                itemStyle: {
-                  // stop the chart from rendering this piece
-                  color: 'none',
-                  decal: {
-                    symbol: 'none'
-                  }
-                },
-                label: {
-                  show: false
-                }
-              }
             ]
           }
         ]
@@ -62,6 +86,30 @@ export default {
     };
   },
   methods: {
+    getData() {
+      axios.get('/AcceptedAnswers/Q2').then(res => {
+        this.timeAnswerData = res.data;
+        console.log(this.timeAnswerData);
+        this.graphData.series[1].data = this.timeAnswerData.map(item => ({
+            value: item.value,
+            name: item.name,
+        }));
+        this.graphData.legend.data = this.timeAnswerData.map(item => item.name);
+        this.drawChart();
+      });
+      axios.get('/NumberOfAnswers/Q1').then(res => {
+        this.noAnswerData = res.data;
+        console.log(this.noAnswerData);
+        this.graphData.series[0].data = [{
+          name: 'No Answer',
+          value: this.noAnswerData[0]
+        },{
+          name: 'Have Answer',
+          value: this.noAnswerData[1]
+        }];
+        this.drawChart();
+      });
+    },
     drawChart() {
       // 基于准备好的dom，初始化echarts实例  这个和上面的main对应
       this.chart = this.$echarts.init(document.getElementById("noAnswer"));
@@ -72,10 +120,12 @@ export default {
     },
   },
   mounted() {
-    this.drawChart();
+    this.getData();
+    console.log(this.graphData);
+
   },
   beforeDestroy() {
-    if(this.chart != null){
+    if (this.chart != null) {
       this.chart.dispose();
     }
 

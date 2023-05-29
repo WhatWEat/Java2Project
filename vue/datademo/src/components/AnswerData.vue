@@ -2,19 +2,13 @@
   <el-container direction="vertical">
     <el-header>
       <AnserStatic></AnserStatic>
+      <el-divider></el-divider>
     </el-header>
-    <el-main>
-      <el-row type="flex" justify="space-between">
-        <el-col :span="12">
+    <el-main style="display: flex; flex-direction: column; align-items: center;">
           <NoAnswer></NoAnswer>
-        </el-col>
-        <el-col :span="12">
           <AnswerDistri></AnswerDistri>
-        </el-col>
-      </el-row>
     </el-main>
   </el-container>
-
 
 </template>
 
