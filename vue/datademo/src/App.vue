@@ -3,7 +3,7 @@
     <el-header>
       <MainTabs></MainTabs>
     </el-header>
-    <el-main>
+    <el-main style="width: 100%; display: flex; justify-content: center; align-items: center;" >
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
