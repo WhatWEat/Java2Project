@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import javax.swing.plaf.PanelUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,5 +29,36 @@ public class QuestionController {
     public float noAnsCount(){
         return JsonParser.noAnsCount();
     }
+
+    @GetMapping("/NumberOfAnswers/Q2/avg")
+    public float avgAnsCount(){
+        return JsonParser.avgAnsCount();
+    }
+
+    @GetMapping("/NumberOfAnswers/Q2/max")
+    public int maxAnsCount(){
+        return JsonParser.maxAnsCount();
+    }
+
+    @GetMapping("/NumberOfAnswers/Q3")
+    public Map<String, Float> ansDistribution(){
+        return JsonParser.ansDistribution();
+    }
+
+    @GetMapping("/AcceptedAnswers/Q1")
+    public float acceptAnsPercent(){
+        return JsonParser.acceptAnsPercent();
+    }
+
+    @GetMapping("/AcceptedAnswers/Q2")
+    public Map<String, Float> resolutionTimeDis(){
+        return JsonParser.resolutionTimeDis();
+    }
+
+    @GetMapping("/AcceptedAnswers/Q3")
+    public float ansOverAccept(){
+        return JsonParser.ansOverAccept();
+    }
+
 
 }

@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class JsonParser {
     public static final String QuestionJsonPath = "src/main/resources/jsons/questions.json";
     public static JSONArray jsonQuestionArray;
-    public static List<Question> questions;
-    public static Map<Long, List<Answer>> ansOfQues;
-    public static Map<Long, Question> idOfQue;
+    public static List<Question> questions; // 总数是998，即questions.size
+    public static Map<Long, List<Answer>> ansOfQues; // 只会记录有回复的, 如果没有回复，查询得到null
+    public static Map<Long, Question> idOfQue; // 总数是998，即questions.size
     private JsonParser(){};
     static {
         try {
@@ -30,8 +30,11 @@ public class JsonParser {
             questions = jsonQuestionArray.toJavaList(Question.class);
             idOfQue = new HashMap<>();
             questions.forEach(q -> {
-                idOfQue.put(q.getQuestion_id(), q);
+                if (!idOfQue.containsKey(q.getQuestion_id())) {
+                    idOfQue.put(q.getQuestion_id(), q);
+                }
             });
+            questions = new ArrayList<>(idOfQue.values());
             // 读取answer
             jsonStr = new String(Files.readAllBytes(Paths.get("src/main/resources/jsons/answers.json")));
             jsonQuestionArray = JSON.parseArray(jsonStr);
@@ -76,16 +79,46 @@ public class JsonParser {
     public static int maxAnsCount(){
         AtomicInteger max = new AtomicInteger(0);
         questions.forEach(e -> {
+            if (e.getAnswer_count() == 40) {
+                System.err.println(e.getQuestion_id());
+            }
             max.set(Math.max(max.get(), e.getAnswer_count()));
         });
         return max.get();
+    }
+
+    public static Map<String, Float> ansDistribution(){
+        int zero = 0,
+            lessThanFive = 0,
+            lessThanTen = 0,
+            moreThanTen = 0;
+        for(List<Answer> answers: ansOfQues.values()){
+            if(answers.size() < 5){
+                lessThanFive++;
+            }
+            else if(answers.size() < 10){
+                lessThanTen++;
+            }
+            else {
+                moreThanTen++;
+            }
+        }
+        Map<String, Float> result = new HashMap<>();
+        int total = idOfQue.size();
+        zero = total - lessThanFive - lessThanTen - moreThanTen;
+        result.put("zero", (float) zero/total);
+        result.put("lessThanFive", (float) lessThanFive/total);
+        result.put("lessThanTen", (float) lessThanTen/total);
+        result.put("moreThanTen", (float) moreThanTen/total);
+        return result;
     }
 
     public static float acceptAnsPercent(){
         int totalCount = questions.size();
         AtomicInteger acc = new AtomicInteger(0);
         questions.forEach(e -> {
-            acc.getAndIncrement();
+            if(e.isIs_answered())
+                acc.getAndIncrement();
         });
         return (float) acc.get() / totalCount;
     }
@@ -95,11 +128,16 @@ public class JsonParser {
             lessThanTwoDay = 0,
             lessThanAWeek = 0,
             longerThanAWeek = 0;
+        System.err.println(idOfQue.size());
+        System.err.println(ansOfQues.size());
         Map<String, Float> result = new HashMap<>();
         for (Long l: idOfQue.keySet()) {
             Question q = idOfQue.get(l);
             if(q.isIs_answered()){
                 List<Answer> answers = ansOfQues.get(l);
+                if(answers == null){
+                    System.err.println(q.getQuestion_id());
+                }
                 for (Answer answer : answers) {
                     if(answer.isIs_accepted()){
                         final float days = (float) (answer.getCreation_date() - q.getCreation_date()) / 86400;
