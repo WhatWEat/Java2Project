@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <div>
-          <el-statistic group-separator="," :value="problem" title="问题总数">
+          <el-statistic group-separator="," :value="answer" title="回答总数">
             <template slot="prefix">
               <i class="el-icon-s-flag" style="color: blue"></i>
             </template>
@@ -12,7 +12,7 @@
       </el-col>
       <el-col :span="6">
         <div>
-          <el-statistic title="解答比">
+          <el-statistic title="采纳">
             <template slot="prefix">
               <i class="el-icon-s-flag" style="color: red"></i>
               <span>{{this.answerAverage.toFixed(2)}}</span>

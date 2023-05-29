@@ -1,32 +1,23 @@
 <template>
-  <div id="acceptedAnswer1" style="width: 40vw; height: 50vh"/>
+  <div id="acceptedAnswer2" style="width: 40vw; height: 50vh"/>
 </template>
 
 <script>
 import axios from "axios";
 
 export default {
-  name: "AcceptedPercent",
+  name: "OverUpvote",
   data() {
     return {
       chart: null,
       graphData: {
         title: {
-          text: '采纳占比',
+          text: '非采纳答案赞数高于采纳答案占比',
           left: 'center'
         },
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)',
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            mark: {show: false},
-            dataView: {show: false, readOnly: false},
-            restore: {show: false},
-            saveAsImage: {show: false}
-          }
         },
         series: [
           {
@@ -34,9 +25,10 @@ export default {
             type: 'pie',
             radius: [20, 200],
             center: ['50%', '50%'],
-            roseType: 'radius',
             itemStyle: {
-              borderRadius: 5
+              borderRadius: 10,
+              borderColor: '#fff',
+              borderWidth: 2
             },
             label: {
               show: false
@@ -47,8 +39,8 @@ export default {
               }
             },
             data: [
-              {value: 40, name: '采纳数'},
-              {value: 33, name: '未采纳数'},
+              {value: 4, name: '未采纳赞数答案高于采纳赞数'},
+              {value: 33, name: '未采纳赞数答案不大于采纳赞数'},
             ]
           }
         ]
@@ -57,7 +49,7 @@ export default {
   },
   methods: {
     getData(){
-      axios.get('/AcceptedAnswers/Q1').then(res => {
+      axios.get('/AcceptedAnswers/Q3').then(res => {
         console.log(res.data);
         this.graphData.series[0].data[0].value = res.data[0];
         this.graphData.series[0].data[1].value = res.data[1] - res.data[0];
@@ -65,7 +57,7 @@ export default {
       })
     },
     drawChart(){
-      this.chart = this.$echarts.init(document.getElementById("acceptedAnswer1"));
+      this.chart = this.$echarts.init(document.getElementById("acceptedAnswer2"));
       // 指定图表的配置项和数据
       let option = this.graphData;
       // 使用刚指定的配置项和数据显示图表。
@@ -73,7 +65,7 @@ export default {
     }
   },
   mounted() {
-    this.getData()
+    this.getData();
   },
   beforeDestroy() {
     if (this.chart != null) {
