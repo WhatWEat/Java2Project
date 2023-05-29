@@ -87,29 +87,12 @@ public class JsonParser {
         return max.get();
     }
 
-    public static Map<String, Float> ansDistribution(){
-        int zero = 0,
-            lessThanFive = 0,
-            lessThanTen = 0,
-            moreThanTen = 0;
+    public static Map<Integer, Integer> ansDistribution(){
+        Map<Integer, Integer> result = new HashMap<>();
         for(List<Answer> answers: ansOfQues.values()){
-            if(answers.size() < 5){
-                lessThanFive++;
-            }
-            else if(answers.size() < 10){
-                lessThanTen++;
-            }
-            else {
-                moreThanTen++;
-            }
+            int value = result.getOrDefault(answers.size(), 0);
+            result.put(answers.size(), value+1);
         }
-        Map<String, Float> result = new HashMap<>();
-        int total = idOfQue.size();
-        zero = total - lessThanFive - lessThanTen - moreThanTen;
-        result.put("zero", (float) zero/total);
-        result.put("lessThanFive", (float) lessThanFive/total);
-        result.put("lessThanTen", (float) lessThanTen/total);
-        result.put("moreThanTen", (float) moreThanTen/total);
         return result;
     }
 

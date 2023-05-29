@@ -41,7 +41,7 @@ public class QuestionController {
     }
 
     @GetMapping("/NumberOfAnswers/Q3")
-    public Map<String, Float> ansDistribution(){
+    public Map<Integer, Integer> ansDistribution(){
         return JsonParser.ansDistribution();
     }
 
