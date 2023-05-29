@@ -24,6 +24,24 @@ public class Question {
     private String link;
     private String title;
     private int up_vote_count;
+    private int comment_count;
+    private List<Comment> comments;
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public int getComment_count() {
+        return comment_count;
+    }
+
+    public void setComment_count(int comment_count) {
+        this.comment_count = comment_count;
+    }
 
     public int getUp_vote_count() {
         return up_vote_count;

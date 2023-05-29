@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import cse.java2.project.entities.Answer;
 import cse.java2.project.entities.Question;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -22,7 +23,6 @@ import org.apache.http.util.EntityUtils;
 
 public class AcceptAnsCrawler {
     public static void main(String[] args) throws IOException {
-        Map<Long, List<Answer>> ansOfQue = new HashMap<>();
         JSONArray ansQueJson = new JSONArray();
         String key = "A71YmgTD8Wao7nN2aakPpg((";
         int pointer = 0;
@@ -64,7 +64,5 @@ public class AcceptAnsCrawler {
             new FileOutputStream("src/main/resources/jsons/answers.json")));
         writer.write(ansQueJson.toString());
         writer.close();
-
-
     }
 }
