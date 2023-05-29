@@ -59,13 +59,8 @@ public class JsonParser {
 
     public static List<Integer> noAnsCount(){
         int totalCount = questions.size();
-        AtomicInteger noAnsCnt = new AtomicInteger(0);
-        questions.forEach(e -> {
-            if(e.getAnswer_count() == 0){
-                noAnsCnt.getAndIncrement();
-            }
-        });
-        return Arrays.asList(noAnsCnt.get(), totalCount);
+        int noAnsCount = questions.size() - ansOfQues.size();
+        return Arrays.asList(noAnsCount, totalCount);
     }
 
     public static List<Integer>  avgAnsCount(){
@@ -108,7 +103,7 @@ public class JsonParser {
         return Arrays.asList(acc.get(), totalCount);
     }
 
-    public static Map<String, Integer> resolutionTimeDis(){
+    public static List<Pair> resolutionTimeDis(){
         int lessThanOneDay = 0,
             lessThanTwoDay = 0,
             lessThanAWeek = 0,
@@ -141,11 +136,10 @@ public class JsonParser {
                 }
             }
         }
-        result.put("<1 day", lessThanOneDay);
-        result.put("<2 day", lessThanTwoDay);
-        result.put("<1 week", lessThanAWeek);
-        result.put(">=1 week", longerThanAWeek);
-        return result;
+        return Arrays.asList(new Pair("<1 day", lessThanOneDay),
+            new Pair("<2 day", lessThanTwoDay),
+            new Pair("<1 week", lessThanAWeek),
+            new Pair(">=1 week", longerThanAWeek));
     }
 
     public static List<Integer> ansOverAccept(){

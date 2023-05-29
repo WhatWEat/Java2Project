@@ -74,7 +74,7 @@ public class QuestionController {
      */
     @GetMapping("/AcceptedAnswers/Q2")
     public List<Pair> resolutionTimeDis(){
-        return PairParser.MapToList(JsonParser.resolutionTimeDis());
+        return JsonParser.resolutionTimeDis();
     }
     /**
      *
