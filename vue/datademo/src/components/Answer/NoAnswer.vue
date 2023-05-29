@@ -25,7 +25,7 @@ export default {
         },
         series: [
           {
-            name: 'Problem Distribution',
+            name: '是否回答问题',
             type: 'pie',
             selectedMode: 'single',
             radius: [0, '30%'],
@@ -40,7 +40,7 @@ export default {
             ]
           },
           {
-            name: 'Problem Distribution',
+            name: '回答数的问题分布',
             type: 'pie',
             radius: ['45%', '60%'],
             labelLine: {
@@ -87,25 +87,25 @@ export default {
   },
   methods: {
     getData() {
-      axios.get('/AcceptedAnswers/Q2').then(res => {
+      axios.get('/NumberOfAnswers/Q3').then(res => {
         this.timeAnswerData = res.data;
         console.log(this.timeAnswerData);
         this.graphData.series[1].data = this.timeAnswerData.map(item => ({
             value: item.value,
-            name: item.name,
+            name: '回答数为'+item.name,
         }));
-        this.graphData.legend.data = this.timeAnswerData.map(item => item.name);
+        this.graphData.legend.data = this.timeAnswerData.map(item => '回答数为'+item.name);
         this.drawChart();
       });
       axios.get('/NumberOfAnswers/Q1').then(res => {
         this.noAnswerData = res.data;
         console.log(this.noAnswerData);
         this.graphData.series[0].data = [{
-          name: 'No Answer',
+          name: '没回答',
           value: this.noAnswerData[0]
         },{
-          name: 'Have Answer',
-          value: this.noAnswerData[1]
+          name: '有回答',
+          value: this.noAnswerData[1] - this.noAnswerData[0]
         }];
         this.drawChart();
       });
