@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -24,13 +25,17 @@ public class AcceptAnsCrawler {
         Map<Long, List<Answer>> ansOfQue = new HashMap<>();
         JSONArray ansQueJson = new JSONArray();
         String key = "A71YmgTD8Wao7nN2aakPpg((";
-        for (int i = 0; i < JsonParser.questions.size()/100; i++) {
-            StringBuilder ids = new StringBuilder(String.valueOf(JsonParser.questions.get(100*i).getQuestion_id()));
-            for (int j = 1; j < 100; j++) {
-                ids.append(';').append(JsonParser.questions.get(100*i+j).getQuestion_id());
+        int pointer = 0;
+        while(pointer < JsonParser.questions.size()){
+            StringBuilder ids = new StringBuilder(String.valueOf(JsonParser.questions.get(pointer).getQuestion_id()));
+            int currentSize = 0;
+            while(pointer < JsonParser.questions.size() && currentSize + JsonParser.questions.get(pointer).getAnswer_count() < 100){
+                ids.append(';').append(JsonParser.questions.get(pointer).getQuestion_id());
+                currentSize += JsonParser.questions.get(pointer).getAnswer_count();
+                pointer++;
             }
             String apiUrl = String.format(
-                "https://api.stackexchange.com/2.3/questions/%s/answers?order=desc&sort=activity&site=stackoverflow&filter=!nOedRLgcx)&key=%s"
+                "https://api.stackexchange.com/2.3/questions/%s/answers?page=1&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!nOedRLgcx)&key=%s"
                 , ids.toString(), key);
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(apiUrl);
@@ -53,8 +58,6 @@ public class AcceptAnsCrawler {
             }
         }
 
-//        ansOfQue = ansQueJson.toJavaObject(ansOfQue.getClass());
-//        System.out.println(ansOfQue);
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
             new FileOutputStream("src/main/resources/jsons/answers.json")));
