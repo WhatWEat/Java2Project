@@ -1,12 +1,10 @@
 <template>
-  <!--  使用没有答案的百分比-->
-  <div id="noAnswer" style="width: 30vw; height: 50vh"/>
+  <div id="anserDistri" style="width: 30vw; height: 50vh"/>
 </template>
 
 <script>
-
 export default {
-  name: "NoAnswer",
+  name: "AnswerDistri",
   data() {
     return {
       chart: null,
@@ -36,11 +34,11 @@ export default {
               }
             },
             data: [
-              { value: 1048, name: 'Search Engine' },
-              { value: 735, name: 'Direct' },
-              { value: 580, name: 'Email' },
-              { value: 484, name: 'Union Ads' },
-              { value: 300, name: 'Video Ads' },
+              {value: 1048, name: 'Search Engine'},
+              {value: 735, name: 'Direct'},
+              {value: 580, name: 'Email'},
+              {value: 484, name: 'Union Ads'},
+              {value: 300, name: 'Video Ads'},
               {
                 // make an record to fill the bottom 50%
                 value: 1048 + 735 + 580 + 484 + 300,
@@ -64,7 +62,7 @@ export default {
   methods: {
     drawChart() {
       // 基于准备好的dom，初始化echarts实例  这个和上面的main对应
-      this.chart = this.$echarts.init(document.getElementById("noAnswer"));
+      this.chart = this.$echarts.init(document.getElementById("anserDistri"));
       // 指定图表的配置项和数据
       let option = this.graphData;
       // 使用刚指定的配置项和数据显示图表。
@@ -78,10 +76,10 @@ export default {
     if(this.chart != null){
       this.chart.dispose();
     }
-
   }
 }
 </script>
 
 <style scoped>
+
 </style>
