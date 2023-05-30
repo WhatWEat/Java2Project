@@ -53,9 +53,9 @@
 | -------- | -------- | ---------- | ---------- |
 | 996      | 1430     | 1.44       | 0.26       |
 
-![Answer1.1](D:\OneDrive\Code\Java\Java2Project\Img\Answer1.1.png)
+![Answer1.1](https://github.com/WhatWEat/Java2Project/blob/main/Img/Answer1.1.png)
 
-![Answer1.3](D:\OneDrive\Code\Java\Java2Project\Img\Answer1.3.png)
+![Answer1.3](https://github.com/WhatWEat/Java2Project/blob/main/Img/Answer1.3.png)
 
 #### 分析
 
