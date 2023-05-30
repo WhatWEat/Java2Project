@@ -22,7 +22,7 @@ export default {
         legend: {
           data: [
           ],
-          bottom:0,
+          bottom: '5%',
           left:'center',
         },
         series: [

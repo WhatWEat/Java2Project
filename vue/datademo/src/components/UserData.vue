@@ -1,6 +1,9 @@
 <template>
   <el-container style="display: flex; flex-direction: column; align-items: center;">
     <el-row>
+      <UserPercent></UserPercent>
+    </el-row>
+    <el-row>
       <UserDis></UserDis>
     </el-row>
     <el-row style="display: flex; flex-direction: column; align-items: center;">
@@ -14,10 +17,11 @@
 <script>
 import UserDis from "@/components/User/UserDis.vue";
 import UserActive from "@/components/User/UserActive.vue";
+import UserPercent from "@/components/User/UserPercent.vue";
 
 export default {
   name: "UserData",
-  components: {UserActive, UserDis}
+  components: {UserPercent, UserActive, UserDis}
 }
 </script>
 
