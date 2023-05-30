@@ -3,6 +3,7 @@ package cse.java2.project.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import cse.java2.project.entities.Answer;
+import cse.java2.project.entities.Comment;
 import cse.java2.project.entities.Owner;
 import cse.java2.project.entities.Question;
 import java.io.IOException;
@@ -254,14 +255,50 @@ public class JsonParser {
             if(ansOfQues.containsKey(q.getQuestion_id())){
                 userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
             }
-//            userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
-            // 添加评论的Owner的id
-
-
-
+            if (q.getComments() != null) {
+                // 添加评论的Owner的id
+                userIds.addAll(q.getComments().stream().map(Comment::getOwner).map(Owner::getAccount_id).toList());
+            }
             int value = result.getOrDefault(String.valueOf(userIds.size()), 0);
             result.put(String.valueOf(userIds.size()), value+1);
         }
+        return result;
+    }
+
+    public static Map<String, Integer> activityEvaluation(){
+        // 发布问题加5，answer+3，comment+2
+        Map<Long, String> usernameOfId = new HashMap<>();
+        Map<Long, Integer> activityOfId = new HashMap<>();
+        for(Question q: questions){
+            if(!usernameOfId.containsKey(q.getOwner().getAccount_id())){
+                usernameOfId.put(q.getOwner().getAccount_id(), q.getOwner().getDisplay_name());
+            }
+            int value = activityOfId.getOrDefault(q.getOwner().getAccount_id(), 0);
+            activityOfId.put(q.getOwner().getAccount_id(), value + 5);
+            if(ansOfQues.get(q.getQuestion_id()) != null){
+                ansOfQues.get(q.getQuestion_id()).forEach(e -> {
+                    if(!usernameOfId.containsKey(e.getOwner().getAccount_id())){
+                        usernameOfId.put(e.getOwner().getAccount_id(), e.getOwner().getDisplay_name());
+                    }
+                    int val = activityOfId.getOrDefault(e.getOwner().getAccount_id(), 0);
+                    activityOfId.put(e.getOwner().getAccount_id(), val + 3);
+                });
+            }
+            if(q.getComments() != null){
+                q.getComments().forEach(e -> {
+                    if(!usernameOfId.containsKey(e.getOwner().getAccount_id())){
+                        usernameOfId.put(e.getOwner().getAccount_id(), e.getOwner().getDisplay_name());
+                    }
+                    int val = activityOfId.getOrDefault(e.getOwner().getAccount_id(), 0);
+                    activityOfId.put(e.getOwner().getAccount_id(), val + 2);
+                });
+            }
+        }
+        Map<String, Integer> result = new HashMap<>();
+        usernameOfId.forEach((u, v) -> {
+            int val = activityOfId.getOrDefault(u, 0);
+            result.put(v, val);
+        });
         return result;
     }
 }
