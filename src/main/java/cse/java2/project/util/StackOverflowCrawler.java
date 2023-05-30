@@ -30,52 +30,53 @@ import org.apache.http.util.EntityUtils;
 
 public class StackOverflowCrawler {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
+
+    try {
+      JSONArray mergeArray = new JSONArray();
+      String key = "A71YmgTD8Wao7nN2aakPpg((";
+      for (int i = 0; i < 10; i++) {
+        String apiUrl = String.format("https://api.stackexchange.com/2.3/questions?page=%d"
+                +
+                "&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!T3Audpctoqz)l6kJC0&key=%s",
+            i + 1, key);
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(apiUrl);
 
         try {
-            JSONArray mergeArray = new JSONArray();
-            String key = "A71YmgTD8Wao7nN2aakPpg((";
-            for (int i = 0; i < 10; i++) {
-                String apiUrl = String.format("https://api.stackexchange.com/2.3/questions?page=%d"
-                        + "&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!T3Audpctoqz)l6kJC0&key=%s",
-                    i + 1, key);
+          CloseableHttpResponse response = httpClient.execute(request);
+          int statusCode = response.getStatusLine().getStatusCode();
 
-                CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-                HttpGet request = new HttpGet(apiUrl);
-
-                try {
-                    CloseableHttpResponse response = httpClient.execute(request);
-                    int statusCode = response.getStatusLine().getStatusCode();
-
-                    if (statusCode == 200) {
-                        HttpEntity entity = response.getEntity();
-                        String jsonResponse = EntityUtils.toString(entity);
-                        System.out.println(jsonResponse);
-                        JSONArray itemsArray = JSON.parseObject(jsonResponse).getJSONArray("items");
-                        mergeArray.addAll(itemsArray);
-                    } else {
-                        System.out.println("Error: " + statusCode);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                new FileOutputStream("src/main/resources/jsons/questions.json")));
-            writer.write(mergeArray.toString());
-            writer.close();
-            List<Question> questions = mergeArray.toJavaList(Question.class);
-            System.out.println(questions);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+          if (statusCode == 200) {
+            HttpEntity entity = response.getEntity();
+            String jsonResponse = EntityUtils.toString(entity);
+            System.out.println(jsonResponse);
+            JSONArray itemsArray = JSON.parseObject(jsonResponse).getJSONArray("items");
+            mergeArray.addAll(itemsArray);
+          } else {
+            System.out.println("Error: " + statusCode);
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
         }
+
+
+      }
+      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+          new FileOutputStream("src/main/resources/jsons/questions.json")));
+      writer.write(mergeArray.toString());
+      writer.close();
+      List<Question> questions = mergeArray.toJavaList(Question.class);
+      System.out.println(questions);
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 //        catch (InterruptedException e) {
 //            throw new RuntimeException(e);
 //        }
-    }
+  }
 }
 
