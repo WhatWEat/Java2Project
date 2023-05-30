@@ -27,63 +27,63 @@ import org.jsoup.select.Elements;
 
 public class HTMLParser {
 
-    private HTMLParser() {
+  private HTMLParser() {
+  }
+
+  public static List<String> findCodeInBlocks(String htmlText) {
+    List<String> codeList = new ArrayList<>();
+    Document document = Jsoup.parse(htmlText);
+    Elements codeElements = document.select("code");
+
+    Pattern pattern = Pattern.compile(".*", Pattern.DOTALL);
+    for (Element codeElement : codeElements) {
+      Matcher matcher = pattern.matcher(codeElement.text());
+      if (matcher.matches()) {
+        codeList.add(matcher.group(0));
+      }
     }
+    return codeList;
+  }
 
-    public static List<String> findCodeInBlocks(String htmlText) {
-        List<String> codeList = new ArrayList<>();
-        Document document = Jsoup.parse(htmlText);
-        Elements codeElements = document.select("code");
+  public static Map<String, Integer> JavaAPICollect(List<String> codeBlocks) {
+    Map<String, Integer> result = new HashMap<>();
+    codeBlocks.forEach(codeBlock -> {
+      try {
+        CompilationUnit cu = StaticJavaParser.parse(codeBlock);
+        Set<String> names = new HashSet<>();
+        cu.accept(new VoidVisitorAdapter<Void>() {
+          @Override
+          public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+            names.add(n.getNameAsString());
+            super.visit(n, arg);
+          }
 
-        Pattern pattern = Pattern.compile(".*", Pattern.DOTALL);
-        for (Element codeElement : codeElements) {
-            Matcher matcher = pattern.matcher(codeElement.text());
-            if (matcher.matches()) {
-                codeList.add(matcher.group(0));
-            }
-        }
-        return codeList;
-    }
+          @Override
+          public void visit(MethodDeclaration n, Void arg) {
+            names.addAll(n.getParameters().stream().map(Parameter::getType).map(
+                Type::asString).toList());
+            super.visit(n, arg);
+          }
 
-    public static Map<String, Integer> JavaAPICollect(List<String> codeBlocks) {
-        Map<String, Integer> result = new HashMap<>();
-        codeBlocks.forEach(codeBlock -> {
-            try {
-                CompilationUnit cu = StaticJavaParser.parse(codeBlock);
-                Set<String> names = new HashSet<>();
-                cu.accept(new VoidVisitorAdapter<Void>() {
-                    @Override
-                    public void visit(ClassOrInterfaceDeclaration n, Void arg) {
-                        names.add(n.getNameAsString());
-                        super.visit(n, arg);
-                    }
-
-                    @Override
-                    public void visit(MethodDeclaration n, Void arg) {
-                        names.addAll(n.getParameters().stream().map(Parameter::getType).map(
-                            Type::asString).toList());
-                        super.visit(n, arg);
-                    }
-
-                    @Override
-                    public void visit(VariableDeclarator n, Void arg) {
-                        names.add(n.getType().asString());
-                        super.visit(n, arg);
-                    }
-                }, null);
-                names.forEach(n -> {
-                    int value = result.getOrDefault(n, 0);
-                    result.put(n, value + 1);
-                });
-            } catch (Exception e) {
-                System.out.println("无法解析的代码块: " + codeBlock);
-            }
-
-
+          @Override
+          public void visit(VariableDeclarator n, Void arg) {
+            names.add(n.getType().asString());
+            super.visit(n, arg);
+          }
+        }, null);
+        names.forEach(n -> {
+          int value = result.getOrDefault(n, 0);
+          result.put(n, value + 1);
         });
+      } catch (Exception e) {
+        System.out.println("无法解析的代码块: " + codeBlock);
+      }
 
-        return result;
-    }
+
+    });
+
+    return result;
+  }
 
 
 }
