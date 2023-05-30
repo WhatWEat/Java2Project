@@ -1,6 +1,6 @@
 <template>
   <!--  使用没有答案的百分比-->
-  <div id="noAnswer" style="width: 80vw; height: 80vh"/>
+  <div id="noAnswer" style="width: 80vw; height: 90vh"/>
 </template>
 
 <script>
@@ -21,7 +21,9 @@ export default {
         },
         legend: {
           data: [
-          ]
+          ],
+          bottom:0,
+          left:'center',
         },
         series: [
           {
@@ -44,7 +46,7 @@ export default {
             type: 'pie',
             radius: ['45%', '60%'],
             labelLine: {
-              length: 30
+              length: 25,
             },
             label: {
               formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
