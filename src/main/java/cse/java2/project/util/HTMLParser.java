@@ -1,5 +1,6 @@
 package cse.java2.project.util;
 
+import com.github.javaparser.ParseException;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
@@ -35,49 +36,42 @@ public class HTMLParser {
         return codeList;
     }
 
-    public static Map<String, Integer> classOrInterfaceCollector(String codeBlock){
-        CompilationUnit cu = StaticJavaParser.parse(codeBlock);
+    public static Map<String, Integer> JavaAPICollect(List<String> codeBlocks){
         Map<String, Integer> result = new HashMap<>();
-        cu.accept(new VoidVisitorAdapter<Void>() {
-            @Override
-            public void visit(ClassOrInterfaceDeclaration n, Void arg) {
-                int value = result.getOrDefault(n.getName().toString(), 0);
-                result.put(n.getName().toString(), value+1);
-                super.visit(n, arg);
+        codeBlocks.forEach(codeBlock -> {
+            System.err.println(codeBlock);
+            CompilationUnit cu;
+            try {
+                cu = StaticJavaParser.parse(codeBlock);
+                cu.accept(new VoidVisitorAdapter<Void>() {
+                    @Override
+                    public void visit(ClassOrInterfaceDeclaration n, Void arg) {
+                        int value = result.getOrDefault(n.getName().toString(), 0);
+                        result.put(n.getName().toString(), value+1);
+                        super.visit(n, arg);
+                    }
+                    @Override
+                    public void visit(MethodDeclaration n, Void arg) {
+                        int value = result.getOrDefault(n.getName().toString(), 0);
+                        result.put(n.getName().toString(), value+1);
+                        super.visit(n, arg);
+                    }
+                    @Override
+                    public void visit(NameExpr n, Void arg) {
+                        int value = result.getOrDefault(n.getName().toString(), 0);
+                        result.put(n.getName().toString(), value+1);
+                        super.visit(n, arg);
+                    }
+                }, null);
+
+            }catch (Exception e) {
+                System.out.println("无法解析的代码块: " + codeBlock);
             }
-        }, null);
+    });
+
         return result;
     }
 
-    public static Map<String, Integer> methodDeclarationCollector(String codeBlock){
-        CompilationUnit cu = StaticJavaParser.parse(codeBlock);
-        Map<String, Integer> result = new HashMap<>();
-        cu.accept(new VoidVisitorAdapter<Void>() {
-
-            @Override
-            public void visit(MethodDeclaration n, Void arg) {
-                int value = result.getOrDefault(n.getName().toString(), 0);
-                result.put(n.getName().toString(), value+1);
-                super.visit(n, arg);
-            }
-        }, null);
-        return result;
-    }
-
-    public static Map<String, Integer> constCollector(String codeBlock){
-        CompilationUnit cu = StaticJavaParser.parse(codeBlock);
-        Map<String, Integer> result = new HashMap<>();
-        cu.accept(new VoidVisitorAdapter<Void>() {
-
-            @Override
-            public void visit(NameExpr n, Void arg) {
-                int value = result.getOrDefault(n.getName().toString(), 0);
-                result.put(n.getName().toString(), value+1);
-                super.visit(n, arg);
-            }
-        }, null);
-        return result;
-    }
 
 
 }
