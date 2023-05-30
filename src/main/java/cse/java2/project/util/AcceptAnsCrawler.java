@@ -24,7 +24,7 @@ import org.apache.http.util.EntityUtils;
 public class AcceptAnsCrawler {
     public static void main(String[] args) throws IOException {
         JSONArray ansQueJson = new JSONArray();
-        String key = "A71YmgTD8Wao7nN2aakPpg((";
+        String key = "PJpa3jAmephrk1Upw7BANg((";
         int pointer = 0;
         System.err.println(JsonParser.questions.size());
         while(pointer < JsonParser.questions.size()){
@@ -36,7 +36,7 @@ public class AcceptAnsCrawler {
                 pointer++;
             }
             String apiUrl = String.format(
-                "https://api.stackexchange.com/2.3/questions/%s/answers?page=1&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme)&key=%s"
+                "https://api.stackexchange.com/2.3/questions/%s/answers?page=1&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme&key=%s"
                 , ids.toString(), key);
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(apiUrl);
