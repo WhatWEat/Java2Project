@@ -5,7 +5,11 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,10 +45,8 @@ public class HTMLParser {
     public static Map<String, Integer> JavaAPICollect(List<String> codeBlocks){
         Map<String, Integer> result = new HashMap<>();
         codeBlocks.forEach(codeBlock -> {
-            System.err.println(codeBlock);
-            CompilationUnit cu;
             try {
-                cu = StaticJavaParser.parse(codeBlock);
+                CompilationUnit cu = StaticJavaParser.parse(codeBlock);
                 Set<String> names = new HashSet<>();
                 cu.accept(new VoidVisitorAdapter<Void>() {
                     @Override
@@ -54,12 +56,14 @@ public class HTMLParser {
                     }
                     @Override
                     public void visit(MethodDeclaration n, Void arg) {
-                        names.add(n.getNameAsString());
+                        names.addAll(n.getParameters().stream().map(Parameter::getType).map(
+                            Type::asString).toList());
                         super.visit(n, arg);
                     }
+
                     @Override
-                    public void visit(NameExpr n, Void arg) {
-                        names.add(n.getNameAsString());
+                    public void visit(VariableDeclarator n, Void arg) {
+                        names.add(n.getType().asString());
                         super.visit(n, arg);
                     }
                 }, null);
@@ -67,11 +71,12 @@ public class HTMLParser {
                     int value = result.getOrDefault(n, 0);
                     result.put(n, value+1);
                 });
-
             }catch (Exception e) {
                 System.out.println("无法解析的代码块: " + codeBlock);
             }
-    });
+
+
+        });
 
         return result;
     }
