@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -118,6 +119,14 @@ public class QuestionController {
     @GetMapping("/Users/Q1")
     public List<Pair> participantsDis(){
         return PairParser.MapToList(JsonParser.participantsDis());
+    }
+    /**
+     *
+     * @return 按照活跃度降序排列的用户，name是用户名，value是活跃度
+     */
+    @GetMapping("/Users/Q2")
+    public List<Pair> activityEvaluation(){
+        return PairParser.MapToList(JsonParser.activityEvaluation()).stream().sorted((e1, e2) -> e2.getValue() - e1.getValue()).toList();
     }
 
 }
