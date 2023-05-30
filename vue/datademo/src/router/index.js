@@ -4,6 +4,7 @@ import AnswerData from "@/components/AnswerData.vue";
 import AcceptedAnserData from "@/components/AcceptedAnserData.vue";
 import TagData from "@/components/TagData.vue";
 import UserData from "@/components/UserData.vue";
+import APIData from "@/components/APIData.vue";
 
 Vue.use(VueRouter)
 export const router = new VueRouter({
@@ -13,6 +14,7 @@ export const router = new VueRouter({
         {path: '/accepted-answer', component: AcceptedAnserData},
         {path: '/tag', component: TagData},
         {path: '/user', component: UserData},
+        {path: '/api', component: APIData},
       ],
       mode: 'history'
     }
