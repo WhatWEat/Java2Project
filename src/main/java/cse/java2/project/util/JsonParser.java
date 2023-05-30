@@ -328,4 +328,23 @@ public class JsonParser {
         });
         return result;
     }
+
+    public static Map<String, Integer> frequentlyDiscussed(){
+        Map<String, Integer> result = new HashMap<>();
+        List<String> bodies = new ArrayList<>();
+        List<String> codes = new ArrayList<>();
+        for(Question q: questions){
+            if(ansOfQues.containsKey(q.getQuestion_id())){
+                bodies.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getBody).toList());
+            }
+            if (q.getComments() != null) {
+                // 添加评论的Owner的id
+                bodies.addAll(q.getComments().stream().map(Comment::getBody).toList());
+            }
+        }
+        bodies.forEach(b -> {
+            codes.addAll(HTMLParser.findCodeInBlocks(b));
+        });
+        return HTMLParser.JavaAPICollect(codes);
+    }
 }

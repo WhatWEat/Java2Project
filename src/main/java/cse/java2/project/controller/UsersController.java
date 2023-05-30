@@ -3,6 +3,7 @@ package cse.java2.project.controller;
 import cse.java2.project.util.JsonParser;
 import cse.java2.project.util.Pair;
 import cse.java2.project.util.PairParser;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,17 +18,17 @@ public class UsersController {
      */
     @GetMapping("/Q1/total")
     public List<Pair> totalParticipantsDis(){
-        return PairParser.MapToList(JsonParser.totalParticipantsDis());
+        return PairParser.MapToList(JsonParser.totalParticipantsDis()).stream().sorted(Comparator.comparingInt(p -> Integer.parseInt(p.getName()))).toList();
     }
 
     @GetMapping("/Q1/answers")
     public List<Pair> answerParticipantsDis(){
-        return PairParser.MapToList(JsonParser.answerParticipantsDis());
+        return PairParser.MapToList(JsonParser.answerParticipantsDis()).stream().sorted(Comparator.comparingInt(p -> Integer.parseInt(p.getName()))).toList();
     }
 
     @GetMapping("/Q1/comments")
     public List<Pair> commentParticipantsDis(){
-        return PairParser.MapToList(JsonParser.commentParticipantsDis());
+        return PairParser.MapToList(JsonParser.commentParticipantsDis()).stream().sorted(Comparator.comparingInt(p -> Integer.parseInt(p.getName()))).toList();
     }
     /**
      *
