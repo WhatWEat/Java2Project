@@ -8,6 +8,15 @@ public class Comment {
     private long post_id;
     private long comment_id;
     private String content_license;
+    private String body;
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public Comment(){}
 

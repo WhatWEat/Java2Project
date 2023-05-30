@@ -26,6 +26,15 @@ public class Question {
     private int up_vote_count;
     private int comment_count;
     private List<Comment> comments;
+    private String body;
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 
     public List<Comment> getComments() {
         return comments;

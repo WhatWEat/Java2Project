@@ -60,7 +60,7 @@ public class QuestionController {
      */
     @GetMapping("/Q3")
     public List<Pair> ansDistribution(){
-        return PairParser.MapToList(JsonParser.ansDistribution());
+        return PairParser.MapToList(JsonParser.ansDistribution()).stream().sorted(Comparator.comparingInt(e -> Integer.parseInt(e.getName()))).toList();
     }
 
 }

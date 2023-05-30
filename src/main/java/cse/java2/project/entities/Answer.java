@@ -13,6 +13,16 @@ public class Answer {
     private long question_id;
     private String content_license;
 
+    private String body;
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     public int getUp_vote_count() {
         return up_vote_count;
     }
