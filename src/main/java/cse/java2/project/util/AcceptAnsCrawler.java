@@ -36,7 +36,7 @@ public class AcceptAnsCrawler {
                 pointer++;
             }
             String apiUrl = String.format(
-                "https://api.stackexchange.com/2.3/questions/%s/answers?page=1&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!nOedRLgcx)&key=%s"
+                "https://api.stackexchange.com/2.3/questions/%s/answers?page=1&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!nNPvSNdWme)&key=%s"
                 , ids.toString(), key);
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(apiUrl);
