@@ -30,6 +30,12 @@ public class UsersController {
     public List<Pair> commentParticipantsDis(){
         return PairParser.MapToList(JsonParser.commentParticipantsDis()).stream().sorted(Comparator.comparingInt(p -> Integer.parseInt(p.getName()))).toList();
     }
+
+    @GetMapping("/Q1/1000threadsData")
+    public List<Pair> threadsSta(){
+        return PairParser.MapToList(JsonParser.threadsSta());
+    }
+
     /**
      *
      * @return 按照活跃度降序排列的用户，name是用户名，value是活跃度
