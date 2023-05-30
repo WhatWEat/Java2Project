@@ -1,19 +1,19 @@
 <template>
-  <div id="TagsCombine" style="width: 90vw; height: 90vh"/>
+  <div id="TagsView" style="width: 90vw; height: 90vh"/>
 </template>
 
 <script>
 import axios from "axios";
 
 export default {
-  name: "TagsCombine",
-  data(){
-    return{
+  name: "TagsView",
+  data() {
+    return {
       data: null,
       chart: null,
       graphData: {
         title: {
-          text: 'Tags组合有最多的支持',
+          text: 'Tags组合有最多的浏览',
           left: 'center'
         },
         tooltip: {
@@ -34,7 +34,7 @@ export default {
             type: 'pie',
             radius: '60%',
             center: ['40%', '50%'],
-            data:[],
+            data: [],
             emphasis: {
               focus: 'self',
               itemStyle: {
@@ -49,17 +49,17 @@ export default {
     }
   },
   methods: {
-    getData(){
-      axios.get('/Tags/Q2').then(res => {
-        this.data = res.data;
-        this.graphData.legend.data = this.data.slice(0, 50).map(item => item.name);
-        this.graphData.series[0].data = this.data.slice(0, 50);
+    getData() {
+      axios.get('/Tags/Q3').then(res => {
+        this.data = res.data.splice(0, 50);
+        this.graphData.legend.data = this.data.map(item => item.name);
+        this.graphData.series[0].data = this.data;
         console.log(this.graphData.series[0].data);
         this.drawChart();
       });
     },
-    drawChart(){
-      this.chart = this.$echarts.init(document.getElementById("TagsCombine"));
+    drawChart() {
+      this.chart = this.$echarts.init(document.getElementById("TagsView"));
       this.chart.setOption(this.graphData);
     }
   },
@@ -70,7 +70,7 @@ export default {
     if (this.chart != null) {
       this.chart.dispose();
     }
-  }
+  },
 }
 </script>
 
