@@ -240,8 +240,8 @@ public class JsonParser {
                     subset.add(set.get(j));
                 }
             }
-
-            subsets.add(subset);
+            if(subset.size() > 1)
+                subsets.add(subset);
         }
 
         return subsets;

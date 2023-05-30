@@ -63,8 +63,4 @@ public class QuestionController {
         return PairParser.MapToList(JsonParser.ansDistribution());
     }
 
-
-
-
-
 }
