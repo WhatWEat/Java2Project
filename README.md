@@ -10,7 +10,14 @@
 ## 技术栈
 
 - 后端框架 Springboot
-  - 数据永久化 Json
+  - 数据永久化: `Jackson`, `fastjson`库，文件以json形式存储
+  - 爬虫：`org.apache.httpcomponents`库
+  - `Collection` 和 `Colletions`
+  - `Stream` API
+  - Lambda expression
+  - Regex expression
+  - 解析html：`org.jsoup`库
+  - 解析java的类，接口，方法，常量：`com.github.javaparser`库
 
 - 前端框架 Vue
   - 图表展示 Echart
