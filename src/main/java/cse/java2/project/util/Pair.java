@@ -1,15 +1,16 @@
 package cse.java2.project.util;
 
 
-public class Pair{
+public class Pair {
+
     private String name;
     private int value;
 
-    public Pair(){
+    public Pair() {
 
     }
 
-    public Pair(String name, int value){
+    public Pair(String name, int value) {
         this.name = name;
         this.value = value;
     }

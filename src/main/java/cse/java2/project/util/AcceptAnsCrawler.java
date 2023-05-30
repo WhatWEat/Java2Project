@@ -22,15 +22,18 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 public class AcceptAnsCrawler {
+
     public static void main(String[] args) throws IOException {
         JSONArray ansQueJson = new JSONArray();
         String key = "PJpa3jAmephrk1Upw7BANg((";
         int pointer = 0;
         System.err.println(JsonParser.questions.size());
-        while(pointer < JsonParser.questions.size()){
-            StringBuilder ids = new StringBuilder(String.valueOf(JsonParser.questions.get(pointer).getQuestion_id()));
+        while (pointer < JsonParser.questions.size()) {
+            StringBuilder ids = new StringBuilder(
+                String.valueOf(JsonParser.questions.get(pointer).getQuestion_id()));
             int currentSize = 0;
-            while(pointer < JsonParser.questions.size() && currentSize + JsonParser.questions.get(pointer).getAnswer_count() < 100){
+            while (pointer < JsonParser.questions.size()
+                && currentSize + JsonParser.questions.get(pointer).getAnswer_count() < 100) {
                 ids.append(';').append(JsonParser.questions.get(pointer).getQuestion_id());
                 currentSize += JsonParser.questions.get(pointer).getAnswer_count();
                 pointer++;
@@ -58,7 +61,6 @@ public class AcceptAnsCrawler {
                 e.printStackTrace();
             }
         }
-
 
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
             new FileOutputStream("src/main/resources/jsons/answers.json")));

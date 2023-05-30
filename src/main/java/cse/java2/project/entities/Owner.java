@@ -3,6 +3,7 @@ package cse.java2.project.entities;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class Owner {
+
     private long account_id;
     private int reputation;
     private long user_id;
@@ -12,7 +13,7 @@ public class Owner {
     private String link;
 
     @JsonCreator
-    public Owner(){
+    public Owner() {
 
     }
 

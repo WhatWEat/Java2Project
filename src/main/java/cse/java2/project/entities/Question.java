@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class Question {
+
     @TableField(exist = false)
     private List<String> tags;
     @TableField(exist = false)
@@ -72,7 +73,7 @@ public class Question {
     }
 
     @JsonCreator
-    public Question(){
+    public Question() {
 
     }
 

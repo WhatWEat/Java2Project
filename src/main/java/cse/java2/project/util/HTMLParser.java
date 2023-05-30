@@ -26,8 +26,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class HTMLParser {
-    private HTMLParser(){}
-    public static List<String> findCodeInBlocks(String htmlText){
+
+    private HTMLParser() {
+    }
+
+    public static List<String> findCodeInBlocks(String htmlText) {
         List<String> codeList = new ArrayList<>();
         Document document = Jsoup.parse(htmlText);
         Elements codeElements = document.select("code");
@@ -42,7 +45,7 @@ public class HTMLParser {
         return codeList;
     }
 
-    public static Map<String, Integer> JavaAPICollect(List<String> codeBlocks){
+    public static Map<String, Integer> JavaAPICollect(List<String> codeBlocks) {
         Map<String, Integer> result = new HashMap<>();
         codeBlocks.forEach(codeBlock -> {
             try {
@@ -54,6 +57,7 @@ public class HTMLParser {
                         names.add(n.getNameAsString());
                         super.visit(n, arg);
                     }
+
                     @Override
                     public void visit(MethodDeclaration n, Void arg) {
                         names.addAll(n.getParameters().stream().map(Parameter::getType).map(
@@ -69,9 +73,9 @@ public class HTMLParser {
                 }, null);
                 names.forEach(n -> {
                     int value = result.getOrDefault(n, 0);
-                    result.put(n, value+1);
+                    result.put(n, value + 1);
                 });
-            }catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("无法解析的代码块: " + codeBlock);
             }
 
@@ -80,7 +84,6 @@ public class HTMLParser {
 
         return result;
     }
-
 
 
 }

@@ -28,39 +28,39 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/NumberOfAnswers")
 public class QuestionController {
+
     /**
-     *
      * @return [0]是没答案的数量，[1]是总共问题的数量
      */
     @GetMapping("/Q1")
 
-    public List<Integer> noAnsCount(){
+    public List<Integer> noAnsCount() {
         return JsonParser.noAnsCount();
     }
+
     /**
-     *
      * @return [0]总共的答案数量，[1]是总共问题的数量
      */
     @GetMapping("/Q2/avg")
-    public List<Integer>  avgAnsCount(){
+    public List<Integer> avgAnsCount() {
         return JsonParser.avgAnsCount();
     }
+
     /**
-     *
      * @return 最多回答的数量
      */
     @GetMapping("/Q2/max")
-    public int maxAnsCount(){
+    public int maxAnsCount() {
         return JsonParser.maxAnsCount();
     }
 
     /**
-     *
      * @return 回答数量分布
      */
     @GetMapping("/Q3")
-    public List<Pair> ansDistribution(){
-        return PairParser.MapToList(JsonParser.ansDistribution()).stream().sorted(Comparator.comparingInt(e -> Integer.parseInt(e.getName()))).toList();
+    public List<Pair> ansDistribution() {
+        return PairParser.MapToList(JsonParser.ansDistribution()).stream()
+            .sorted(Comparator.comparingInt(e -> Integer.parseInt(e.getName()))).toList();
     }
 
 }
