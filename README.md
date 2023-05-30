@@ -15,7 +15,6 @@
   - `Collection` 和 `Colletions`
   - `Stream` API
   - Lambda expression
-  - Regex expression
   - 解析html：`org.jsoup`库
   - 解析java的类，接口，方法，常量：`com.github.javaparser`库
 
