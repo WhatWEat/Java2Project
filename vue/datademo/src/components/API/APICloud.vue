@@ -58,7 +58,6 @@ export default {
     getAPIData(){
       axios.get("/JavaAPI/Q1").then(res => {
         console.log(res.data);
-        console.log('111');
         this.graphData.series[0].data = res.data;
         this.chart = this.$echarts.init(document.getElementById("APICloud"));
         this.chart.setOption(this.graphData);
