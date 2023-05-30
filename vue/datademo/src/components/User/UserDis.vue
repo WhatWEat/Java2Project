@@ -1,5 +1,6 @@
 <template>
-  <el-carousel indicator-position="outside" autoplay height="80vh" style="width: 80vw;">
+  <el-carousel indicator-position="outside" autoplay interval="10000" height="80vh"
+               style="width: 80vw;">
     <el-carousel-item style="height: 80vh">
       <div id="total" style="width: 80vw; height: 80vh"/>
     </el-carousel-item>
@@ -19,11 +20,11 @@ import axios from "axios";
 export default {
   name: "UserDis",
   data() {
-    return{
+    return {
       chartTotal: null,
       chartComment: null,
       chartAnswer: null,
-
+      chat: null,
       graphData: {
         title: {
           text: '用户数据分布',
@@ -102,6 +103,12 @@ export default {
   beforeDestroy() {
     if (this.chart) {
       this.chart.dispose();
+    }
+    if (this.chartComment) {
+      this.chartComment.dispose();
+    }
+    if (this.chartAnswer) {
+      this.chartAnswer.dispose();
     }
   }
 }
