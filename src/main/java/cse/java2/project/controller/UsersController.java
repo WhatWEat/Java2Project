@@ -31,7 +31,7 @@ public class UsersController {
         return PairParser.MapToList(JsonParser.commentParticipantsDis()).stream().sorted(Comparator.comparingInt(p -> Integer.parseInt(p.getName()))).toList();
     }
 
-    @GetMapping("/Q1/1000threadsData")
+    @GetMapping("/Q1/threadsSta")
     public List<Pair> threadsSta(){
         return PairParser.MapToList(JsonParser.threadsSta());
     }
