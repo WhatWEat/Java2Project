@@ -6,6 +6,7 @@
     </el-header>
     <el-main style="display: flex; flex-direction: column; align-items: center;">
           <NoAnswer></NoAnswer>
+          <el-divider></el-divider>
           <AnswerDistri></AnswerDistri>
     </el-main>
   </el-container>

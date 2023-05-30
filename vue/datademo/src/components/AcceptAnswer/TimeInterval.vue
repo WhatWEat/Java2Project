@@ -11,6 +11,10 @@ export default {
     return{
       chart: null,
       graphData: {
+        title: {
+          text: '回答时间分布',
+          left: 'center'
+        },
         grid: { containLabel: true },
         xAxis: { name: 'value' },
         yAxis: { type: 'category', data: []},

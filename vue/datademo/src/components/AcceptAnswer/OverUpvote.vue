@@ -1,5 +1,5 @@
 <template>
-  <div id="acceptedAnswer2" style="width: 40vw; height: 50vh"/>
+  <div id="acceptedAnswer2" style="width: 40vw; height: 60vh"/>
 </template>
 
 <script>
