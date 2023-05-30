@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs @tab-click="handleClick">
+    <el-tabs v-model="activeTab">
       <el-tab-pane label="Answer" name="/answer"></el-tab-pane>
       <el-tab-pane label="Accepted Answer" name="/accepted-answer"></el-tab-pane>
       <el-tab-pane label="Tags" name="/tag"></el-tab-pane>
@@ -13,11 +13,31 @@
 <script>
 export default {
   name: "MainTabs",
+  data() {
+    return {
+      activeTab: '/answer'
+    }
+  },
   methods: {
     handleClick(tab, event) {
       this.$router.push(tab.name);
       console.log(tab.name);
     }
+  },
+  watch: {
+    activeTab(newTab) {
+      this.$router.push(newTab).catch(err => {
+        if (err.name !== 'NavigationDuplicated') {
+          throw err;
+        }
+      });
+    }
+  },
+  created() {
+    this.activeTab = this.$route.path;
+    this.$router.afterEach((to) => {
+      this.activeTab = to.path;
+    })
   }
 }
 </script>
