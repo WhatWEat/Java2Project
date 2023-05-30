@@ -97,7 +97,7 @@ public class JsonParser {
         return result;
     }
 
-    public static List<Integer>  acceptAnsCnt(){
+    public static List<Integer> acceptAnsCnt(){
         int totalCount = questions.size();
         AtomicInteger acc = new AtomicInteger(0);
         questions.forEach(e -> {
@@ -292,6 +292,31 @@ public class JsonParser {
         return result;
     }
 
+    public static Map<String, Integer> threadsSta(){
+        Map<String, Integer> result = new HashMap<>();
+        Set<Long> userIds = new HashSet<>();
+        Set<Long> userIdInAns = new HashSet<>();
+        Set<Long> userIdInCom = new HashSet<>();
+        for(Question q: questions){
+            userIds.add(q.getOwner().getAccount_id());
+            if(ansOfQues.containsKey(q.getQuestion_id())){
+                List<Long> ids = ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList();
+                userIds.addAll(ids);
+                userIdInAns.addAll(ids);
+            }
+            if (q.getComments() != null) {
+                List<Long> ids = q.getComments().stream().map(Comment::getOwner).map(Owner::getAccount_id).toList();
+                // 添加评论的Owner的id
+                userIds.addAll(ids);
+                userIdInCom.addAll(ids);
+            }
+        }
+        result.put("total", userIds.size());
+        result.put("answers", userIdInAns.size());
+        result.put("comments", userIdInCom.size());
+        return result;
+    }
+
     public static Map<String, Integer> activityEvaluation(){
         // 发布问题加5，answer+3，comment+2
         Map<Long, String> usernameOfId = new HashMap<>();
@@ -327,5 +352,24 @@ public class JsonParser {
             result.put(v, val);
         });
         return result;
+    }
+
+    public static Map<String, Integer> frequentlyDiscussed(){
+        Map<String, Integer> result = new HashMap<>();
+        List<String> bodies = new ArrayList<>();
+        List<String> codes = new ArrayList<>();
+        for(Question q: questions){
+            if(ansOfQues.containsKey(q.getQuestion_id())){
+                bodies.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getBody).toList());
+            }
+            if (q.getComments() != null) {
+                // 添加评论的Owner的id
+                bodies.addAll(q.getComments().stream().map(Comment::getBody).toList());
+            }
+        }
+        bodies.forEach(b -> {
+            codes.addAll(HTMLParser.findCodeInBlocks(b));
+        });
+        return HTMLParser.JavaAPICollect(codes);
     }
 }
