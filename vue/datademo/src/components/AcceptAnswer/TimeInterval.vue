@@ -23,7 +23,7 @@ export default {
           left: 'center',
           min: 10,
           max: 100,
-          text: ['High Score', 'Low Score'],
+          text: ['More', 'Less'],
           dimension: 0,
           inRange: {
             color: ['#65B581', '#FFCE34', '#FD665F']

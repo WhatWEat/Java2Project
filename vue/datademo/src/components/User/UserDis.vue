@@ -31,12 +31,13 @@ export default {
           left: 'center'
         },
         xAxis: {
+          name: 'Thread中行为数',
           type: 'category',
           boundaryGap: false,
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
         },
         series: [
           {

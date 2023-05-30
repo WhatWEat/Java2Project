@@ -12,12 +12,12 @@ export default {
       chart: null,
       graphData: {
         title: {
-          text: '采纳占比',
+          text: '问题解决比',
           left: 'center'
         },
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)',
+          formatter: '{a} <br/>{b} : ({d}%)',
         },
         toolbox: {
           show: true,
@@ -30,7 +30,7 @@ export default {
         },
         series: [
           {
-            name: '采纳占比',
+            name: '解决占比',
             type: 'pie',
             radius: [20, 200],
             center: ['50%', '50%'],
@@ -47,8 +47,8 @@ export default {
               }
             },
             data: [
-              {value: 40, name: '采纳数'},
-              {value: 33, name: '未采纳数'},
+              {value: 40, name: '解决数'},
+              {value: 33, name: '未解决数'},
             ]
           }
         ]
