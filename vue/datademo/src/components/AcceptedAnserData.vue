@@ -1,5 +1,5 @@
 <template>
-  <el-container direction="vertical">
+  <el-container direction="vertical" style="display: flex; flex-direction: column; align-items: center;">
     <el-row>
       <el-col :span="10">
         <AcceptedPercent></AcceptedPercent>

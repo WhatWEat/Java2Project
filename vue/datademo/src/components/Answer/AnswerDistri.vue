@@ -12,6 +12,10 @@ export default {
       chart: null,
       data: [],
       graphData: {
+        title: {
+          text: '回答数分布',
+          left: 'center'
+        },
         grid: {containLabel: true},
         xAxis: {
           type: 'category',
