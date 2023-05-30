@@ -4,39 +4,26 @@
 
 <script>
 import "echarts-wordcloud";
+import axios from "axios";
 export default {
   name: "TagsAppearJava",
   data(){
     return{
       chart: null,
-    }
-  },
-  mounted() {
-    this.initChart();
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return;
-    }
-    this.chart.dispose();
-    this.chart = null;
-  },
-  methods: {
-    initChart() {
-      this.chart = this.$echarts.init(document.getElementById("chart-container"));
-      var keywords = [];
-      for (let index = 0; index < 20; index++) {
-        let random = Math.floor(Math.random() * 100);
-        keywords.push({
-          name: random,
-          value: random,
-        });
-      }
-      var option = {
+      graphData: {
+        tooltip: {
+          show: true,
+          formatter: function(params) {
+            return "<div><p style='font-weight: bold; font-size: 14px;'>经常出现的Tags</p><p>" + params.data.name + ": " + params.data.value + "</p></div>";
+          },
+          textStyle: {
+            fontSize: 16
+          }
+        },
         series: [
           {
             type: "wordCloud",
-            sizeRange: [12, 60],
+            sizeRange: [20, 80],
             rotationRange: [-90, 90],
             rotationStep: 45,
             gridSize: 15,
@@ -58,19 +45,40 @@ export default {
               },
             },
             emphasis: {
+              focus: 'self',
               textStyle: {
                 shadowBlur: 10,
                 shadowColor: "#333",
                 color: "red",
               },
             },
-            data: keywords,
+            data: [],
           },
         ],
-      };
-      this.chart.setOption(option);
+      },
+
+    }
+  },
+  methods: {
+    getData(){
+      axios.get('/Tags/Q1').then(res => {
+        this.graphData.series[0].data = res.data;
+        this.drawChart();
+      });
+    },
+    drawChart() {
+      this.chart = this.$echarts.init(document.getElementById("chart-container"));
+      this.chart.setOption(this.graphData);
     },
   },
+  mounted() {
+    this.getData();
+  },
+  beforeDestroy() {
+    if (this.chart != null) {
+      this.chart.dispose();
+    }
+  }
 }
 </script>
 
