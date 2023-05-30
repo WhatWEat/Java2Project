@@ -85,5 +85,39 @@ public class QuestionController {
         return JsonParser.ansOverAccept();
     }
 
+    /**
+     *
+     * @return 升序的出现次数的tags
+     */
+    @GetMapping("/Tags/Q1")
+    public List<Pair> appearMostWithJava(){
+        return PairParser.MapToList(JsonParser.appearMostWithJava()).stream().sorted((p1, p2) -> p1.getValue()-p2.getValue()).toList();
+    }
+
+    /**
+     *
+     * @return 降序排列，被点赞最多的
+     */
+    @GetMapping("/Tags/Q2")
+    public List<Pair> MostUpCom(){
+        return JsonParser.MostUpCom();
+    }
+    /**
+     *
+     * @return 降序排列，被观看最多的
+     */
+    @GetMapping("/Tags/Q3")
+    public List<Pair> MostViewCom(){
+        return JsonParser.MostViewCom();
+    }
+
+    /**
+     *
+     * @return 降序排列，被观看最多的
+     */
+    @GetMapping("/Users/Q1")
+    public List<Pair> participantsDis(){
+        return PairParser.MapToList(JsonParser.participantsDis());
+    }
 
 }

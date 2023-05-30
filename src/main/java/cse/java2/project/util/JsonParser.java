@@ -3,6 +3,7 @@ package cse.java2.project.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import cse.java2.project.entities.Answer;
+import cse.java2.project.entities.Owner;
 import cse.java2.project.entities.Question;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,8 +11,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class JsonParser {
@@ -168,4 +171,95 @@ public class JsonParser {
         return Arrays.asList(over , total);
     }
 
+    public static Map<String, Integer> appearMostWithJava(){
+        Map<String, Integer> result = new HashMap<>();
+        for(Question q: questions){
+            if(q.getTags() == null || !q.getTags().contains("java")){
+                continue;
+            }
+            for(String tag: q.getTags()){
+                if(!tag.equals("java")){
+                    int value = result.getOrDefault(tag, 0);
+                    result.put(tag, value+1);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<Pair> MostUpCom(){
+        Map<Set<String>, Integer> immediate = new HashMap<>();
+        for(Question q: questions){
+            if(q.getUp_vote_count() == 0){
+                continue;
+            }
+            List<Set<String>> tagSubsets = generateSubsets(q.getTags());
+            tagSubsets.forEach(s -> {
+                int value = immediate.getOrDefault(s, 0);
+                immediate.put(s, value+q.getUp_vote_count());
+            });
+        }
+        Map<String, Integer> imm2 = new HashMap<>();
+        immediate.forEach((s, i) -> {
+            imm2.put(s.toString(), i);
+        });
+        return PairParser.MapToList(imm2).stream().sorted((p1, p2) -> p2.getValue() - p1.getValue()).toList();
+    }
+
+    public static List<Pair> MostViewCom(){
+        Map<Set<String>, Integer> immediate = new HashMap<>();
+        for(Question q: questions){
+            if(q.getView_count() == 0){
+                continue;
+            }
+            List<Set<String>> tagSubsets = generateSubsets(q.getTags());
+            tagSubsets.forEach(s -> {
+                int value = immediate.getOrDefault(s, 0);
+                immediate.put(s, value+q.getView_count());
+            });
+        }
+        Map<String, Integer> imm2 = new HashMap<>();
+        immediate.forEach((s, i) -> {
+            imm2.put(s.toString(), i);
+        });
+        return PairParser.MapToList(imm2).stream().sorted((p1, p2) -> p2.getValue() - p1.getValue()).toList();
+    }
+    private static List<Set<String>> generateSubsets(List<String> set) {
+        int n = set.size();
+        List<Set<String>> subsets = new ArrayList<>();
+
+        // 生成二进制掩码
+        int total = (int) Math.pow(2, n);
+        for (int i = 0; i < total; i++) {
+            Set<String> subset = new HashSet<>();
+
+            for (int j = 0; j < n; j++) {
+                // 检查二进制掩码对应位置的位是否为1
+                if ((i & (1 << j)) > 0) {
+                    subset.add(set.get(j));
+                }
+            }
+
+            subsets.add(subset);
+        }
+
+        return subsets;
+    }
+
+    public static Map<String, Integer> participantsDis(){
+        Map<String, Integer> result = new HashMap<>();
+        for(Question q: questions){
+            Set<Long> userIds = new HashSet<>();
+            userIds.add(q.getOwner().getAccount_id());
+            userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
+//            userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
+            // 添加评论的Owner的id
+
+
+
+            int value = result.getOrDefault(String.valueOf(userIds.size()), 0);
+            result.put(String.valueOf(userIds.size()), value+1);
+        }
+        return result;
+    }
 }
