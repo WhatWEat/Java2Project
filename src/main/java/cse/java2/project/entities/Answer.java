@@ -1,6 +1,7 @@
 package cse.java2.project.entities;
 
 public class Answer {
+
     private Owner owner;
     private boolean is_accepted;
     private long community_owned_date;
@@ -32,8 +33,8 @@ public class Answer {
     }
 
     public Answer(Owner owner, boolean is_accepted, long community_owned_date, int up_vote_count,
-                  int score, long last_activity_date, long last_edit_date, long creation_date,
-                  long answer_id, long question_id, String content_license) {
+        int score, long last_activity_date, long last_edit_date, long creation_date,
+        long answer_id, long question_id, String content_license) {
         this.owner = owner;
         this.is_accepted = is_accepted;
         this.community_owned_date = community_owned_date;
@@ -47,7 +48,7 @@ public class Answer {
         this.content_license = content_license;
     }
 
-    public Answer(){
+    public Answer() {
 
     }
 

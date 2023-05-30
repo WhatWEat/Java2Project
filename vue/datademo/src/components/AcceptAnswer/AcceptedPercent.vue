@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    getData(){
+    getData() {
       axios.get('/AcceptedAnswers/Q1').then(res => {
         console.log(res.data);
         this.graphData.series[0].data[0].value = res.data[0];
@@ -64,7 +64,7 @@ export default {
         this.drawChart();
       })
     },
-    drawChart(){
+    drawChart() {
       this.chart = this.$echarts.init(document.getElementById("acceptedAnswer1"));
       // 指定图表的配置项和数据
       let option = this.graphData;

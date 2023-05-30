@@ -36,10 +36,9 @@ public class StackOverflowCrawler {
             JSONArray mergeArray = new JSONArray();
             String key = "A71YmgTD8Wao7nN2aakPpg((";
             for (int i = 0; i < 10; i++) {
-                String apiUrl = String.format(
-                    "https://api.stackexchange.com/2.3/questions?page=%d"
-                        + "&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!T3Audpctoqz)l6kJC0&key=%s"
-                    , i + 1, key);
+                String apiUrl = String.format("https://api.stackexchange.com/2.3/questions?page=%d"
+                        + "&pagesize=100&order=desc&sort=activity&site=stackoverflow&filter=!T3Audpctoqz)l6kJC0&key=%s",
+                    i + 1, key);
 
                 CloseableHttpClient httpClient = HttpClientBuilder.create().build();
                 HttpGet request = new HttpGet(apiUrl);

@@ -1,6 +1,7 @@
 package cse.java2.project.entities;
 
 public class Comment {
+
     private Owner owner;
     private boolean edited;
     private int score;
@@ -18,10 +19,11 @@ public class Comment {
         this.body = body;
     }
 
-    public Comment(){}
+    public Comment() {
+    }
 
     public Comment(Owner owner, boolean edited, int score, long creation_date, long post_id,
-                   long comment_id, String content_license) {
+        long comment_id, String content_license) {
         this.owner = owner;
         this.edited = edited;
         this.score = score;

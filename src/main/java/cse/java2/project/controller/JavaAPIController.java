@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/JavaAPI")
 public class JavaAPIController {
+
     /**
-     *
      * @return 升序的出现次数的tags
      */
     @GetMapping("/Q1")
-    public List<Pair> frequentlyDiscussed(){
-        return PairParser.MapToList(JsonParser.frequentlyDiscussed()).stream().sorted((p1, p2) -> p2.getValue()-p1.getValue()).toList();
+    public List<Pair> frequentlyDiscussed() {
+        return PairParser.MapToList(JsonParser.frequentlyDiscussed()).stream()
+            .sorted((p1, p2) -> p2.getValue() - p1.getValue()).toList();
     }
 }
