@@ -251,7 +251,9 @@ public class JsonParser {
         for(Question q: questions){
             Set<Long> userIds = new HashSet<>();
             userIds.add(q.getOwner().getAccount_id());
-            userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
+            if(ansOfQues.containsKey(q.getQuestion_id())){
+                userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
+            }
 //            userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
             // 添加评论的Owner的id
 
