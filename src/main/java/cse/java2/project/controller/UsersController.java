@@ -15,9 +15,19 @@ public class UsersController {
      *
      * @return 降序排列，被观看最多的
      */
-    @GetMapping("/Q1")
-    public List<Pair> participantsDis(){
-        return PairParser.MapToList(JsonParser.participantsDis());
+    @GetMapping("/Q1/total")
+    public List<Pair> totalParticipantsDis(){
+        return PairParser.MapToList(JsonParser.totalParticipantsDis());
+    }
+
+    @GetMapping("/Q1/answers")
+    public List<Pair> answerParticipantsDis(){
+        return PairParser.MapToList(JsonParser.answerParticipantsDis());
+    }
+
+    @GetMapping("/Q1/comments")
+    public List<Pair> commentParticipantsDis(){
+        return PairParser.MapToList(JsonParser.commentParticipantsDis());
     }
     /**
      *

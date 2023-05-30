@@ -247,7 +247,7 @@ public class JsonParser {
         return subsets;
     }
 
-    public static Map<String, Integer> participantsDis(){
+    public static Map<String, Integer> totalParticipantsDis(){
         Map<String, Integer> result = new HashMap<>();
         for(Question q: questions){
             Set<Long> userIds = new HashSet<>();
@@ -255,6 +255,33 @@ public class JsonParser {
             if(ansOfQues.containsKey(q.getQuestion_id())){
                 userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
             }
+            if (q.getComments() != null) {
+                // 添加评论的Owner的id
+                userIds.addAll(q.getComments().stream().map(Comment::getOwner).map(Owner::getAccount_id).toList());
+            }
+            int value = result.getOrDefault(String.valueOf(userIds.size()), 0);
+            result.put(String.valueOf(userIds.size()), value+1);
+        }
+        return result;
+    }
+
+    public static Map<String, Integer> answerParticipantsDis(){
+        Map<String, Integer> result = new HashMap<>();
+        for(Question q: questions){
+            Set<Long> userIds = new HashSet<>();
+            if(ansOfQues.containsKey(q.getQuestion_id())){
+                userIds.addAll(ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList());
+            }
+            int value = result.getOrDefault(String.valueOf(userIds.size()), 0);
+            result.put(String.valueOf(userIds.size()), value+1);
+        }
+        return result;
+    }
+
+    public static Map<String, Integer> commentParticipantsDis(){
+        Map<String, Integer> result = new HashMap<>();
+        for(Question q: questions){
+            Set<Long> userIds = new HashSet<>();
             if (q.getComments() != null) {
                 // 添加评论的Owner的id
                 userIds.addAll(q.getComments().stream().map(Comment::getOwner).map(Owner::getAccount_id).toList());
