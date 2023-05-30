@@ -301,17 +301,15 @@ public class JsonParser {
             userIds.add(q.getOwner().getAccount_id());
             if(ansOfQues.containsKey(q.getQuestion_id())){
                 List<Long> ids = ansOfQues.get(q.getQuestion_id()).stream().map(Answer::getOwner).map(Owner::getAccount_id).toList();
-                userIds.addAll(ids);
                 userIdInAns.addAll(ids);
             }
             if (q.getComments() != null) {
                 List<Long> ids = q.getComments().stream().map(Comment::getOwner).map(Owner::getAccount_id).toList();
                 // 添加评论的Owner的id
-                userIds.addAll(ids);
                 userIdInCom.addAll(ids);
             }
         }
-        result.put("total", userIds.size());
+        result.put("questions", userIds.size());
         result.put("answers", userIdInAns.size());
         result.put("comments", userIdInCom.size());
         return result;
